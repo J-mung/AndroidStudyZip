@@ -48,7 +48,6 @@ public class MainActivity extends AppCompatActivity implements OnItemClick {
                 if(confirmName(appName)) {
                     MainData mainData = new MainData(R.mipmap.ic_launcher, "홍드로이드", appName);
                     appList.add(mainData);
-                    appList.get(i).setTv_content(appInfos[appInfos.length-1]);
                 }
             }
         } catch (PackageManager.NameNotFoundException e) {
@@ -71,21 +70,35 @@ public class MainActivity extends AppCompatActivity implements OnItemClick {
             startActivity(intent);
     }
 
+    // activity 이름 확인
     public boolean confirmName(String appName) {
         boolean token = false;
         if(appName.equals("EditTextExample"))
             token = true;
         else if(appName.equals("IntentExamMain"))
             token = true;
+        else if(appName.equals("ServiceExam"))
+            token = true;
+        else if(appName.equals("WebViewExam"))
+            token = true;
+        else if(appName.equals("SpinnerExam"))
+            token = true;
         return token;
     }
 
+    // activity 이름에 맞처서 intent 생성
     public Intent createAppIntent(String appName) {
         Intent intent = null;
         if(appName.equals("EditTextExample"))
             intent = new Intent(MainActivity.this, EditTextExample.class);
         else if(appName.equals("IntentExamMain"))
             intent = new Intent(MainActivity.this, IntentExamMain.class);
+        else if(appName.equals("ServiceExam"))
+            intent = new Intent(MainActivity.this, ServiceExam.class);
+        else if(appName.equals("WebViewExam"))
+            intent = new Intent(MainActivity.this, WebViewExam.class);
+        else if(appName.equals("SpinnerExam"))
+            intent = new Intent(MainActivity.this, SpinnerExam.class);
 
         return intent;
     }

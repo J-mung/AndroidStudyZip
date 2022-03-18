@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="test">
+        <item>왜 values 파일을</item>
+        <item>array로해야만</item>
+        <item>entries에 들어가는거?</item>
+    </string-array>
+</resources>
