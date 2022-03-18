@@ -36,14 +36,20 @@ public class MainActivity extends AppCompatActivity implements OnItemClick {
 
         appList = new ArrayList<>();
 
+        // activity들의 class 이름을 따와서 appList에 저장
         ActivityInfo[] activityInfos;
         try {
             activityInfos = getActivityList();
             for(int i = 0; i < activityInfos.length; i++) {
-                MainData mainData = new MainData(R.mipmap.ic_launcher, "홍드로이드", "미정");
-                appList.add(mainData);
                 String[] appInfos = activityInfos[i].name.toString().split("\\.");
-                appList.get(i).setTv_content(appInfos[appInfos.length-1]);
+                String appName = appInfos[appInfos.length-1];
+
+                // Main 화면에서 표시하고 싶은 app이 맞다면 MainData를 생성하고 appList에 저장
+                if(confirmName(appName)) {
+                    MainData mainData = new MainData(R.mipmap.ic_launcher, "홍드로이드", appName);
+                    appList.add(mainData);
+                    appList.get(i).setTv_content(appInfos[appInfos.length-1]);
+                }
             }
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
@@ -59,17 +65,29 @@ public class MainActivity extends AppCompatActivity implements OnItemClick {
     public void onClick(String appName) {
         // 전달받은 appName을 통해 Intent를 생성하고 화면 전환
         Log.e("test", "appName: " + appName);
+        Intent intent = createAppIntent(appName);
+
+        if(intent != null)
+            startActivity(intent);
+    }
+
+    public boolean confirmName(String appName) {
+        boolean token = false;
+        if(appName.equals("EditTextExample"))
+            token = true;
+        else if(appName.equals("IntentExamMain"))
+            token = true;
+        return token;
+    }
+
+    public Intent createAppIntent(String appName) {
         Intent intent = null;
         if(appName.equals("EditTextExample"))
             intent = new Intent(MainActivity.this, EditTextExample.class);
         else if(appName.equals("IntentExamMain"))
             intent = new Intent(MainActivity.this, IntentExamMain.class);
-        /*switch (appName) {
-            case "EditTextExample" : intent = new Intent(MainActivity.this, EditTextExample.class);
-            default: intent = null;
-        }*/
-        if(intent != null)
-            startActivity(intent);
+
+        return intent;
     }
 
     public ActivityInfo[] getActivityList() throws PackageManager.NameNotFoundException {
