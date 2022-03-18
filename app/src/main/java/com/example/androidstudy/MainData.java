@@ -1,0 +1,39 @@
+package com.example.androidstudy;
+
+import android.content.Context;
+
+public class MainData {
+    private int iv_profile;
+    private String tv_lecturer;
+    private String tv_content;
+
+    public MainData(int iv_profile, String tv_lecturer, String tv_content) {
+        this.iv_profile = iv_profile;
+        this.tv_lecturer = tv_lecturer;
+        this.tv_content = tv_content;
+    }
+
+    public int getIv_profile() {
+        return iv_profile;
+    }
+
+    public void setIv_profile(int iv_profile) {
+        this.iv_profile = iv_profile;
+    }
+
+    public String getTv_lecturer() {
+        return tv_lecturer;
+    }
+
+    public void setTv_lecturer(String tv_lecturer) {
+        this.tv_lecturer = tv_lecturer;
+    }
+
+    public String getTv_content() {
+        return tv_content;
+    }
+
+    public void setTv_content(String tv_content) {
+        this.tv_content = tv_content;
+    }
+}
