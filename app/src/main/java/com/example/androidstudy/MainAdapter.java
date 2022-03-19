@@ -55,7 +55,12 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.CustomViewHold
             @Override
             public boolean onLongClick(View view) {
                 String appName = holder.tv_content.getText().toString();
-                mCallback.onClick(appName);
+
+                try {
+                    mCallback.onClick(appName);
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
 
                 //Intent intent = getAppIntent(view);
                 //startActivity(intent, )

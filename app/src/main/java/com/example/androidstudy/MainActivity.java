@@ -23,6 +23,10 @@ public class MainActivity extends AppCompatActivity implements OnItemClick {
     private MainAdapter mainAdapter;
     private RecyclerView recyclerView;
     private LinearLayoutManager linearLayoutManager;
+    private String[] actNames = {
+            "EditTextExample", "IntentExamMain", "ServiceExam", "WebViewExam", "SpinnerExam",
+            "LoadingAniExam"
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +65,7 @@ public class MainActivity extends AppCompatActivity implements OnItemClick {
     }
 
     @Override
-    public void onClick(String appName) {
+    public void onClick(String appName) throws ClassNotFoundException {
         // 전달받은 appName을 통해 Intent를 생성하고 화면 전환
         Log.e("test", "appName: " + appName);
         Intent intent = createAppIntent(appName);
@@ -73,32 +77,25 @@ public class MainActivity extends AppCompatActivity implements OnItemClick {
     // activity 이름 확인
     public boolean confirmName(String appName) {
         boolean token = false;
-        if(appName.equals("EditTextExample"))
-            token = true;
-        else if(appName.equals("IntentExamMain"))
-            token = true;
-        else if(appName.equals("ServiceExam"))
-            token = true;
-        else if(appName.equals("WebViewExam"))
-            token = true;
-        else if(appName.equals("SpinnerExam"))
-            token = true;
+
+        for(int i = 0; i < actNames.length; i++) {
+            if(actNames[i].equals(appName))  {
+                token = true;
+            }
+        }
+
         return token;
     }
 
     // activity 이름에 맞처서 intent 생성
-    public Intent createAppIntent(String appName) {
+    public Intent createAppIntent(String appName) throws ClassNotFoundException {
         Intent intent = null;
-        if(appName.equals("EditTextExample"))
-            intent = new Intent(MainActivity.this, EditTextExample.class);
-        else if(appName.equals("IntentExamMain"))
-            intent = new Intent(MainActivity.this, IntentExamMain.class);
-        else if(appName.equals("ServiceExam"))
-            intent = new Intent(MainActivity.this, ServiceExam.class);
-        else if(appName.equals("WebViewExam"))
-            intent = new Intent(MainActivity.this, WebViewExam.class);
-        else if(appName.equals("SpinnerExam"))
-            intent = new Intent(MainActivity.this, SpinnerExam.class);
+
+        for(int i = 0; i < actNames.length; i++) {
+            if(actNames[i].equals(appName)) {
+                intent = new Intent(MainActivity.this, Class.forName("com.example.androidstudy."+appName));
+            }
+        }
 
         return intent;
     }
