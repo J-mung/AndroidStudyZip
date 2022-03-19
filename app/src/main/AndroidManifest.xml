@@ -30,6 +30,12 @@
             android:name=".SpinnerExam"
             android:exported="false"/>
         <activity
+            android:name=".LoadingAniExam"
+            android:exported="false"/>
+        <activity
+            android:name=".MusicPlayerExam"
+            android:exported="false"/>
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
