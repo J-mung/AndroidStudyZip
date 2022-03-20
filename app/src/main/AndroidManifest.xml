@@ -36,6 +36,9 @@
             android:name=".MusicPlayerExam"
             android:exported="false"/>
         <activity
+            android:name=".GoogleMapExam"
+            android:exported="false"/>
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
@@ -46,6 +49,10 @@
         </activity>
 
         <service android:name=".MusicService"/>
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyD3oDJLCQq3Bm3U_hRrHLfbQhqfhtxNgx8"/>
     </application>
 
 </manifest>
