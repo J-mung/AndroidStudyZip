@@ -2,9 +2,12 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:background="?attr/selectableItemBackground"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
+    <!-- View for default -->
     <LinearLayout
+        android:id="@+id/item_default"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
@@ -36,6 +39,29 @@
                 android:text="예제 이름"/>
 
         </LinearLayout>
+
     </LinearLayout>
 
+    <!-- View for expend -->
+    <LinearLayout
+        android:id="@+id/item_expend"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:gravity="center">
+
+        <Button
+            android:id="@+id/btn_expand_url"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:text="상세설명"/>
+        <Button
+            android:id="@+id/btn_expand_start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:text="실행"/>
+
+    </LinearLayout>
 </LinearLayout>
