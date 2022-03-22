@@ -14,6 +14,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -29,7 +30,6 @@ public class MainActivity extends AppCompatActivity implements OnItemClick {
             "LoadingAniExam", "GoogleMapExam"
     };
     private long backBtnTime = 0;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
