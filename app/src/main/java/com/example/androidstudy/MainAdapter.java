@@ -6,6 +6,9 @@ import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebChromeClient;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -67,11 +70,22 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.CustomViewHold
                     holder.btn_expand_start.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            String appName = holder.tv_content.getText().toString();
-
                             // MainActivity의 OnClick 호출
                             try {
-                                mCallback.onClick(appName);
+                                mCallback.onClick(curContent);
+                            } catch (ClassNotFoundException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+
+                    // btn_expand_url event
+                    holder.btn_expand_url.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            String viewDetail = "url_" + curContent;
+                            try {
+                                mCallback.onClick(viewDetail);
                             } catch (ClassNotFoundException e) {
                                 e.printStackTrace();
                             }
@@ -104,6 +118,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.CustomViewHold
         protected TextView tv_content;
         protected LinearLayout item_expand;
         protected Button btn_expand_url, btn_expand_start;
+        protected WebView webView_detail_url;
 
         public CustomViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -113,6 +128,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.CustomViewHold
             this.item_expand = (LinearLayout) itemView.findViewById(R.id.item_expend);
             this.btn_expand_url = (Button) itemView.findViewById(R.id.btn_expand_url);
             this.btn_expand_start = (Button) itemView.findViewById(R.id.btn_expand_start);
+            this.webView_detail_url = (WebView) itemView.findViewById(R.id.webView_detail_url);
         }
     }
 }
