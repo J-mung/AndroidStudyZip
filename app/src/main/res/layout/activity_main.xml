@@ -14,4 +14,10 @@
         android:scrollbarSize="5dp"
         android:scrollbarThumbVertical="@android:color/darker_gray"/>
 
+    <WebView
+        android:id="@+id/webView_detail_url"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"/>
+
 </LinearLayout>

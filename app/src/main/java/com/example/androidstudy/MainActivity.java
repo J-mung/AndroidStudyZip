@@ -1,20 +1,15 @@
 package com.example.androidstudy;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -71,6 +66,7 @@ public class MainActivity extends AppCompatActivity implements OnItemClick {
     public void onClick(String appName) throws ClassNotFoundException {
         // 전달받은 appName을 통해 Intent를 생성하고 화면 전환
         Log.e("test", "appName: " + appName);
+
         Intent intent = createAppIntent(appName);
 
         if(intent != null)
@@ -94,12 +90,17 @@ public class MainActivity extends AppCompatActivity implements OnItemClick {
     public Intent createAppIntent(String appName) throws ClassNotFoundException {
         Intent intent = null;
 
-        for(int i = 0; i < actNames.length; i++) {
-            if(actNames[i].equals(appName)) {
-                intent = new Intent(MainActivity.this, Class.forName("com.example.androidstudy."+appName));
+        // appName 앞에 "url_" string이 있다면, 웹뷰를 열어 appName의 상세보기 진행
+        if(appName.contains("url_")) {
+            intent = new Intent(MainActivity.this, WebViewExam.class);
+            intent.putExtra("url", appName.substring(4, appName.length()));
+        } else {
+            for (int i = 0; i < actNames.length; i++) {
+                if (actNames[i].equals(appName)) {
+                    intent = new Intent(MainActivity.this, Class.forName("com.example.androidstudy." + appName));
+                }
             }
         }
-
         return intent;
     }
 
