@@ -24,15 +24,15 @@ import java.util.ArrayList;
 
 public class MainAdapter extends RecyclerView.Adapter<MainAdapter.CustomViewHolder> {
 
-    private ArrayList<MainData> appList;
-    private OnItemClick mCallback;              // 클릭된 아이템의 이름을 mainActivity로 반환하기 위한 listener
-    private Context context;
+    private ArrayList<AppInfo> appInfos;
+    //private OnItemClick mCallback;              // 클릭된 아이템의 이름을 mainActivity로 반환하기 위한 listener
+    private Context mContext;
     private SparseBooleanArray selectedItems = new SparseBooleanArray();    // 다중 선택시 선택한 position에 대한 item 정보를 보관하는 객체
 
-    public MainAdapter(Context context, ArrayList<MainData> arrayList, OnItemClick listener) {
-        appList = arrayList;
-        this.context = context;
-        this.mCallback = listener;
+    public MainAdapter(Context context, ArrayList<AppInfo> arrayList) {
+        appInfos = arrayList;
+        this.mContext = context;
+    //    this.mCallback = listener;
     }
 
     @NonNull
@@ -46,16 +46,17 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.CustomViewHold
 
     @Override
     public void onBindViewHolder(@NonNull MainAdapter.CustomViewHolder holder, int position) {
-        holder.iv_profile.setImageResource(appList.get(position).getIv_profile());
-        holder.tv_lecturer.setText(appList.get(position).getTv_lecturer());
-        holder.tv_content.setText(appList.get(position).getTv_content());
+        holder.iv_profile.setImageResource(appInfos.get(position).getIv_profile());
+        holder.tv_lecturer.setText(appInfos.get(position).getTv_lecturer());
+        holder.tv_content.setText(appInfos.get(position).getTv_content());
+        holder.tv_content_id.setText(String.valueOf(appInfos.get(position).getId()));
 
         holder.itemView.setTag(position);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String curContent = holder.tv_content.getText().toString();
-                Toast.makeText(view.getContext(), curContent, Toast.LENGTH_SHORT).show();
+                // 선택된 content의 name, url 등의 정보를 appInfos에서 쉽게 얻기 위해 id값 활용
+                int id = Integer.parseInt(holder.tv_content_id.getText().toString())-1;
 
                 // get()는 position값이 존재하면 true를 반환함
                 if (selectedItems.get(holder.getAdapterPosition())) { // VISIBLE -> INVISIBLE
@@ -70,12 +71,13 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.CustomViewHold
                     holder.btn_expand_start.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            // MainActivity의 OnClick 호출
+                            Intent intent = null;
                             try {
-                                mCallback.onClick(curContent);
+                                intent = new Intent(mContext, Class.forName("com.example.androidstudy." + appInfos.get(id).getTv_content()));
                             } catch (ClassNotFoundException e) {
                                 e.printStackTrace();
                             }
+                            mContext.startActivity(intent);
                         }
                     });
 
@@ -83,11 +85,13 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.CustomViewHold
                     holder.btn_expand_url.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            String viewDetail = "url_" + curContent;
-                            try {
-                                mCallback.onClick(viewDetail);
-                            } catch (ClassNotFoundException e) {
-                                e.printStackTrace();
+                            Intent intent = null;
+                            intent = new Intent(mContext, WebViewExam.class);
+                            if(appInfos.get(id).getUrl().equals(""))
+                                Toast.makeText(mContext, "You need to set url", Toast.LENGTH_SHORT).show();
+                            else {
+                                intent.putExtra("url", appInfos.get(id).getUrl());
+                                mContext.startActivity(intent);
                             }
                         }
                     });
@@ -100,8 +104,6 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.CustomViewHold
             public boolean onLongClick(View view) {
                 String appName = holder.tv_content.getText().toString();
 
-                //Intent intent = getAppIntent(view);
-                //startActivity(intent, )
                 return true;
             }
         });
@@ -109,26 +111,24 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.CustomViewHold
 
     @Override
     public int getItemCount() {
-        return (null != appList ? appList.size() : 0);
+        return (null != appInfos ? appInfos.size() : 0);
     }
 
     public class CustomViewHolder extends RecyclerView.ViewHolder{
         protected ImageView iv_profile;
-        protected TextView tv_lecturer;
-        protected TextView tv_content;
+        protected TextView tv_lecturer, tv_content, tv_content_id;
         protected LinearLayout item_expand;
         protected Button btn_expand_url, btn_expand_start;
-        protected WebView webView_detail_url;
 
         public CustomViewHolder(@NonNull View itemView) {
             super(itemView);
             this.iv_profile = (ImageView) itemView.findViewById(R.id.iv_profile);
             this.tv_lecturer = (TextView) itemView.findViewById(R.id.tv_lecturer);
             this.tv_content = (TextView) itemView.findViewById(R.id.tv_content);
+            this.tv_content_id = (TextView) itemView.findViewById(R.id.tv_content_id);
             this.item_expand = (LinearLayout) itemView.findViewById(R.id.item_expend);
             this.btn_expand_url = (Button) itemView.findViewById(R.id.btn_expand_url);
             this.btn_expand_start = (Button) itemView.findViewById(R.id.btn_expand_start);
-            this.webView_detail_url = (WebView) itemView.findViewById(R.id.webView_detail_url);
         }
     }
 }

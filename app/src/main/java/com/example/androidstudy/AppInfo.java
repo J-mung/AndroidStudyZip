@@ -1,17 +1,11 @@
 package com.example.androidstudy;
 
 public class AppInfo {
-    private String name;
+    private int iv_profile;
+    private String tv_lecturer;
+    private String tv_content;
     private String url;
-    private String id;
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
+    private int id;
 
     public String getUrl() {
         return url;
@@ -21,11 +15,35 @@ public class AppInfo {
         this.url = url;
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
+    }
+
+    public int getIv_profile() {
+        return iv_profile;
+    }
+
+    public void setIv_profile(int iv_profile) {
+        this.iv_profile = iv_profile;
+    }
+
+    public String getTv_lecturer() {
+        return tv_lecturer;
+    }
+
+    public void setTv_lecturer(String tv_lecturer) {
+        this.tv_lecturer = tv_lecturer;
+    }
+
+    public String getTv_content() {
+        return tv_content;
+    }
+
+    public void setTv_content(String tv_content) {
+        this.tv_content = tv_content;
     }
 }

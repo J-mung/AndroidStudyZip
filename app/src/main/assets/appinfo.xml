@@ -1,11 +1,52 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <apps>
     <app>
-        <name>IntentExamMain</name>
+        <iv_profile>R.mipmap.ic_launcher</iv_profile>
+        <tv_lecturer>홍드로이드</tv_lecturer>
+        <tv_content>IntentExamMain</tv_content>
         <url>https://meal-coding.tistory.com/22</url>
         <id>1</id>
-        <name>EditTextExample</name>
+    </app>
+    <app>
+        <iv_profile>R.mipmap.ic_launcher</iv_profile>
+        <tv_lecturer>홍드로이드</tv_lecturer>
+        <tv_content>EditTextExample</tv_content>
         <url>https://meal-coding.tistory.com/22</url>
         <id>2</id>
+    </app>
+    <app>
+        <iv_profile>R.mipmap.ic_launcher</iv_profile>
+        <tv_lecturer>홍드로이드</tv_lecturer>
+        <tv_content>ServiceExam</tv_content>
+        <url></url>
+        <id>3</id>
+    </app>
+    <app>
+        <iv_profile>R.mipmap.ic_launcher</iv_profile>
+        <tv_lecturer>홍드로이드</tv_lecturer>
+        <tv_content>WebViewExam</tv_content>
+        <url></url>
+        <id>4</id>
+    </app>
+    <app>
+        <iv_profile>R.mipmap.ic_launcher</iv_profile>
+        <tv_lecturer>홍드로이드</tv_lecturer>
+        <tv_content>SpinnerExam</tv_content>
+        <url></url>
+        <id>5</id>
+    </app>
+    <app>
+        <iv_profile>R.mipmap.ic_launcher</iv_profile>
+        <tv_lecturer>홍드로이드</tv_lecturer>
+        <tv_content>LoadingAniExam</tv_content>
+        <url></url>
+        <id>6</id>
+    </app>
+    <app>
+        <iv_profile>R.mipmap.ic_launcher</iv_profile>
+        <tv_lecturer>홍드로이드</tv_lecturer>
+        <tv_content>GoogleMapExam</tv_content>
+        <url></url>
+        <id>7</id>
     </app>
 </apps>
