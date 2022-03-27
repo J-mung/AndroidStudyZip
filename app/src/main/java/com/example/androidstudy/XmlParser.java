@@ -45,12 +45,16 @@ public class XmlParser {
                         curApp = new AppInfo();
                         apps.add(curApp);
                     } else if(curApp != null) {
-                        if("name".equals(eltName)) {
-                            curApp.setName(parser.nextText());
+                        if("iv_profile".equals(eltName)) {
+                            curApp.setIv_profile(R.mipmap.ic_launcher);     // 개별 프로필을 저장할 수 있도록 개선할 것
+                        }else if("tv_lecturer".equals(eltName)) {
+                            curApp.setTv_lecturer(parser.nextText());
+                        }else if("tv_content".equals(eltName)) {
+                            curApp.setTv_content(parser.nextText());
                         }else if("url".equals(eltName)) {
                             curApp.setUrl(parser.nextText());
                         }else if("id".equals(eltName)) {
-                            curApp.setId(parser.nextText());
+                            curApp.setId(Integer.parseInt(parser.nextText()));
                         }
                     }
                     break;
@@ -68,7 +72,9 @@ public class XmlParser {
         StringBuilder builder = new StringBuilder();
 
         for(AppInfo app : apps) {
-            builder.append(app.getName()).append("\n").
+            builder.append(app.getIv_profile()).append("\n").
+                    append(app.getTv_lecturer()).append("\n").
+                    append(app.getTv_content()).append("\n").
                     append(app.getUrl()).append("\n").
                     append(app.getId()).append("\n\n");
         }
