@@ -49,4 +49,11 @@
         <url></url>
         <id>7</id>
     </app>
+    <app>
+        <iv_profile>R.mipmap.ic_launcher</iv_profile>
+        <tv_lecturer>홍드로이드</tv_lecturer>
+        <tv_content>CameraExam</tv_content>
+        <url>https://meal-coding.tistory.com/27</url>
+        <id>8</id>
+    </app>
 </apps>

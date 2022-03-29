@@ -3,6 +3,9 @@
     package="com.example.androidstudy">
 
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 
     <application
         android:allowBackup="true"
@@ -39,6 +42,10 @@
             android:name=".GoogleMapExam"
             android:exported="false"/>
         <activity
+            android:name=".CameraExam"
+            android:exported="false">
+        </activity>
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
@@ -49,6 +56,18 @@
         </activity>
 
         <service android:name=".MusicService"/>
+
+        <provider
+            android:authorities="com.example.androidstudy"
+            android:name="androidx.core.content.FileProvider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+
+        </provider>
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
