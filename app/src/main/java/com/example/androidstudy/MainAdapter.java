@@ -1,25 +1,27 @@
 package com.example.androidstudy;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebChromeClient;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
 public class MainAdapter extends RecyclerView.Adapter<MainAdapter.CustomViewHolder> {
@@ -28,7 +30,6 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.CustomViewHold
     //private OnItemClick mCallback;              // 클릭된 아이템의 이름을 mainActivity로 반환하기 위한 listener
     private Context mContext;
     private SparseBooleanArray selectedItems = new SparseBooleanArray();    // 다중 선택시 선택한 position에 대한 item 정보를 보관하는 객체
-
     public MainAdapter(Context context, ArrayList<AppInfo> arrayList) {
         appInfos = arrayList;
         this.mContext = context;
@@ -46,9 +47,9 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.CustomViewHold
 
     @Override
     public void onBindViewHolder(@NonNull MainAdapter.CustomViewHolder holder, int position) {
-        holder.iv_profile.setImageResource(appInfos.get(position).getIv_profile());
-        holder.tv_lecturer.setText(appInfos.get(position).getTv_lecturer());
-        holder.tv_content.setText(appInfos.get(position).getTv_content());
+        holder.iv_profile.setImageResource(appInfos.get(position).getProfile());
+        holder.tv_lecturer.setText(appInfos.get(position).getLecturer());
+        holder.tv_content.setText(appInfos.get(position).getContent());
         holder.tv_content_id.setText(String.valueOf(appInfos.get(position).getId()));
 
         holder.itemView.setTag(position);
@@ -73,7 +74,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.CustomViewHold
                         public void onClick(View view) {
                             Intent intent = null;
                             try {
-                                intent = new Intent(mContext, Class.forName("com.example.androidstudy." + appInfos.get(id).getTv_content()));
+                                intent = new Intent(mContext, Class.forName("com.example.androidstudy." + appInfos.get(id).getContent()));
                             } catch (ClassNotFoundException e) {
                                 e.printStackTrace();
                             }
@@ -86,10 +87,12 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.CustomViewHold
                         @Override
                         public void onClick(View view) {
                             Intent intent = null;
-                            intent = new Intent(mContext, WebViewExam.class);
-                            if(appInfos.get(id).getUrl().equals(""))
+                            if(appInfos.get(id).getUrl().equals("")) {
                                 Toast.makeText(mContext, "You need to set url", Toast.LENGTH_SHORT).show();
+                                setUrlDialog(id);
+                            }
                             else {
+                                intent = new Intent(mContext, WebViewExam.class);
                                 intent.putExtra("url", appInfos.get(id).getUrl());
                                 mContext.startActivity(intent);
                             }
@@ -107,6 +110,44 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.CustomViewHold
                 return true;
             }
         });
+    }
+
+    public void setUrlDialog(int appId) {
+        AlertDialog.Builder ad = new AlertDialog.Builder(mContext);
+        ad.setIcon(R.mipmap.ic_launcher_round);
+        ad.setTitle(appInfos.get(appId).getContent());
+        ad.setMessage("등록된 url가 없습니다. url를 설정해주세요.");
+        AppInfoResParser resParser = new AppInfoResParser(mContext);
+
+        // test setting url func
+        final EditText et = new EditText(mContext);
+        et.setText("https://www.google.com");
+        ad.setView(et);
+
+        ad.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                String result = et.getText().toString();
+                Log.e("editXml", "xmlParser() call");
+                FileInputStream fis = null;
+                try {
+                    fis = new FileInputStream(new File(mContext.getFilesDir(), "appinfo.xml"));
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+                resParser.setXmlUrl(fis,6, result);
+                //appInfos.get(appId).setUrl(result);
+                dialogInterface.dismiss();
+            }
+        });
+
+        ad.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+        ad.show();
     }
 
     @Override

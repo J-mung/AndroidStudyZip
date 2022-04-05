@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<feed>
+    <app id="1" profile="R.mipmap.ic_launcher">
+        <lecturer>홍드로이드</lecturer>
+        <content>IntentExamMain</content>
+        <url>https://meal-coding.tistory.com/22</url>
+    </app>
+    <app id="2" profile="R.mipmap.ic_launcher">
+        <lecturer>홍드로이드</lecturer>
+        <content>EditTextExample</content>
+        <url>https://meal-coding.tistory.com/22</url>
+    </app>
+    <app id="3" profile="R.mipmap.ic_launcher">
+        <lecturer>홍드로이드</lecturer>
+        <content>ServiceExam</content>
+        <url></url>
+    </app>
+    <app id="4" profile="R.mipmap.ic_launcher">
+        <lecturer>홍드로이드</lecturer>
+        <content>WebViewExam</content>
+        <url></url>
+    </app>
+    <app id="5" profile="R.mipmap.ic_launcher">
+        <lecturer>홍드로이드</lecturer>
+        <content>SpinnerExam</content>
+        <url></url>
+    </app>
+    <app id="6" profile="R.mipmap.ic_launcher">
+        <lecturer>홍드로이드</lecturer>
+        <content>LoadingAniExam</content>
+        <url></url>
+    </app>
+    <app id="7" profile="R.mipmap.ic_launcher">
+        <lecturer>홍드로이드</lecturer>
+        <content>GoogleMapExam</content>
+        <url></url>
+    </app>
+    <app id="8" profile="R.mipmap.ic_launcher">
+        <lecturer>홍드로이드</lecturer>
+        <content>CameraExam</content>
+        <url>https://meal-coding.tistory.com/27</url>
+    </app>
+</feed>
