@@ -5,55 +5,145 @@ import android.util.Log;
 import android.util.Xml;
 
 import org.w3c.dom.Document;
+import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
-import org.xmlpull.v1.XmlPullParserFactory;
-import org.xmlpull.v1.XmlSerializer;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.StringWriter;
 import java.util.ArrayList;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
 
-public class MyXmlParser {
+public class AppInfoXmlParser {
+    private final static String ns = null;
     private ArrayList<AppInfo> appInfos;
     private Context mContext;
 
     private static final String XML_PATH = "app/src/main/assets/appinfo.xml";
 
-    public MyXmlParser() {
+    public AppInfoXmlParser() {
         mContext = null;
     }
 
-    public MyXmlParser(Context mContext) {
+    public AppInfoXmlParser(Context mContext) {
         this.mContext = mContext;
     }
 
     public void parseXML(InputStream is) {
-        XmlPullParserFactory parserFactory;
         try {
-            parserFactory = XmlPullParserFactory.newInstance();
-            XmlPullParser parser = parserFactory.newPullParser();
+            // parser instance
+            XmlPullParser parser = Xml.newPullParser();
             parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
             parser.setInput(is, null);
 
-            this.appInfos = processParsing(parser);
+            //this.appInfos = processParsing(parser);
+            parser.nextTag();
+            this.appInfos = readFeed(parser);
 
         } catch (XmlPullParserException | IOException e) {
             e.printStackTrace();
         }
     }
+
+    private ArrayList<AppInfo> readFeed(XmlPullParser parser) throws IOException, XmlPullParserException {
+        ArrayList<AppInfo> apps = new ArrayList<>();
+
+        // Below statment will initially queue your cursor to the feed element's start tag : <feed>
+        parser.require(XmlPullParser.START_TAG, ns, "feed");
+        while(parser.next() != XmlPullParser.END_TAG) {
+            if(parser.getEventType() != XmlPullParser.START_TAG) {
+                continue;
+            }
+            String name = parser.getName();
+            // Starts by looking for the app tag
+            if (name.equals("app")) {
+                apps.add(readApp(parser));
+            } else {
+                skip(parser);
+            }
+        }
+        return apps;
+    }
+
+    private AppInfo readApp(XmlPullParser parser) throws  XmlPullParserException, IOException {
+        parser.require(XmlPullParser.START_TAG, ns, "app");
+        String iv_profile = null;
+        String tv_lecturer = null;
+        String tv_content = null;
+        String url = null;
+        String id = null;
+
+        // get attribute
+        for(int i = 0 ; i < parser.getAttributeCount(); i++) {
+            String atrName = parser.getAttributeName(i);
+            if(atrName.equals("id"))
+                id = parser.getAttributeValue(i);
+            else if(atrName.equals("profile"))
+                iv_profile = parser.getAttributeValue(null, "iv_profile");
+        }
+        // get app's children info
+        while(parser.next() != XmlPullParser.END_TAG) {
+            if(parser.getEventType() != XmlPullParser.START_TAG) {
+                continue;
+            }
+            String name = parser.getName();
+            if(name.equals("tv_lecturer")) {
+                tv_lecturer = readTarget(parser, "tv_lecturer");
+            } else if(name.equals("tv_content")) {
+                tv_content = readTarget(parser, "tv_content");
+            } else if(name.equals("url")) {
+                url = readTarget(parser, "url");
+            } else {
+                skip(parser);
+            }
+        }
+
+        return (new AppInfo(R.mipmap.ic_launcher, tv_lecturer, tv_content, url, Integer.parseInt(id)));
+    }
+
+    private String readTarget(XmlPullParser parser, String target) throws XmlPullParserException, IOException {
+        parser.require(XmlPullParser.START_TAG, ns, target);
+        String text = readText(parser);
+        parser.require(XmlPullParser.END_TAG, ns, target);
+        return text;
+    }
+
+    private String readText(XmlPullParser parser) throws XmlPullParserException, IOException {
+        String result = "";
+        if(parser.next() == XmlPullParser.TEXT) {
+            result = parser.getText();
+            parser.nextTag();
+        }
+        return result;
+    }
+
+    private void skip(XmlPullParser parser) throws XmlPullParserException, IOException {
+        if(parser.getEventType() != XmlPullParser.START_TAG) {
+            throw new IllegalStateException();
+        }
+        int depth = 1;
+        while(depth != 0) {
+            switch (parser.next()) {
+                case XmlPullParser.END_TAG:
+                    depth--;
+                    break;
+                case XmlPullParser.START_TAG:
+                    depth++;
+                    break;
+            }
+        }
+    }
+
     private ArrayList<AppInfo> processParsing(XmlPullParser parser) throws IOException, XmlPullParserException{
         ArrayList<AppInfo> apps = new ArrayList<>();
         int eventType = parser.getEventType();
@@ -71,11 +161,11 @@ public class MyXmlParser {
                         apps.add(curApp);
                     } else if(curApp != null) {
                         if("iv_profile".equals(eltName)) {
-                            curApp.setIv_profile(R.mipmap.ic_launcher);     // 개별 프로필을 저장할 수 있도록 개선할 것
+                            curApp.setProfile(R.mipmap.ic_launcher);     // 개별 프로필을 저장할 수 있도록 개선할 것
                         }else if("tv_lecturer".equals(eltName)) {
-                            curApp.setTv_lecturer(parser.nextText());
+                            curApp.setLecturer(parser.nextText());
                         }else if("tv_content".equals(eltName)) {
-                            curApp.setTv_content(parser.nextText());
+                            curApp.setContent(parser.nextText());
                         }else if("url".equals(eltName)) {
                             curApp.setUrl(parser.nextText());
                         }else if("id".equals(eltName)) {
@@ -93,150 +183,69 @@ public class MyXmlParser {
         return this.appInfos != null ? this.appInfos : null;
     }
 
-    public void editXml(String selection, String url, Context mContext) {
-        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-        try(InputStream inputStream = new FileInputStream(XML_PATH)) {
-            Log.e("editXml", "xml file was opend");
-            DocumentBuilder db = dbf.newDocumentBuilder();
-            Document doc = db.parse(inputStream);
-            NodeList appList = doc.getElementsByTagName("app");
-            Log.e("editXml", "editing xml file");
-            for(int i = 0; i < appList.getLength(); i++) {
-                Node app = appList.item(i);
-                if(app.getNodeType() == Node.ELEMENT_NODE) {
-                    NodeList childeNodes = app.getChildNodes();
-                    for(int j = 0; j < childeNodes.getLength(); j++) {
-                        Node item = childeNodes.item(j);
-                        Log.e("editXml", "Tag Name: " + item.getNodeName().toString());
-                        if(item.getNodeType() == Node.ELEMENT_NODE) {
-                            if("tv_content".equalsIgnoreCase(item.getNodeName())){
-                                if(selection.equals(item.getTextContent())) {
-                                    item.setTextContent(url);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            try(FileOutputStream outputStream = new FileOutputStream(mContext.getAssets().open("appinfo.xml").toString())) {
-                writeXml(doc, outputStream);
-            }
-        } catch (IOException | ParserConfigurationException | SAXException | TransformerException e) {
-            e.printStackTrace();
-        }
-        /*DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder builder = factory.newDocumentBuilder();
-        Document doc = builder.parse(context.openFileInput("appinfo.xml"));
-
-        NodeList nodeList = doc.getElementsByTagName(tag);
-
-        for(int i = 0; i < nodeList.getLength(); i++) {
-            Node node = nodeList.item(i);
-            NamedNodeMap att = node.getAttributes();
-            int h = 0;
-            boolean isTitle = false;
-            while(h < att.getLength()) {
-                Node app = att.item(h);
-                if(app.getNodeValue().equals(title))
-                    isTitle = true;
-                if(h == 3 && isTitle)
-                    app.setNodeValue(content);
-                h += 1;
-            }
-        }
-
-        Transformer transformer = null;
-        TransformerFactory transformerFactory = TransformerFactory.newInstance();
-        try {
-            transformer = transformerFactory.newTransformer();
-        } catch (TransformerConfigurationException e) {
-            e.printStackTrace();
-        }
-        DOMSource dSource = new DOMSource(doc);
-        StreamResult result = new StreamResult(context.openFileOutput("appinfo.xml", Context.MODE_PRIVATE));
-        if(transformer != null) {
-            try {
-                transformer.transform(dSource, result);
-            } catch (TransformerException e) {
-                e.printStackTrace();
-            }
-        }*/
-    }
-
     // 변경하고 싶은 app의 id값
     // 변경하고 싶은 내용(현재는 url만 고려함)
-    private void writeXml(int target, String editContent) {
-        // 파일 수정하는 과정
-        // 파일을 열어서 수정할 위치를 찾는다
+    public void writeAppInfo(InputStream is, int target, String editContent) throws IOException, ParserConfigurationException, SAXException, TransformerConfigurationException {
+        //FileInputStream is = mContext.openFileInput("appinfo.xml");
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder builder = factory.newDocumentBuilder();
+        Document document = builder.parse(is);
+        NodeList apps = document.getElementsByTagName("app");
 
-        // 파일을 연다
-        XmlPullParserFactory factory;
-        FileInputStream is = null;
-        try {
-            StringBuilder sb = new StringBuilder();
-            factory = XmlPullParserFactory.newInstance();
-            factory.setNamespaceAware(true);
-            XmlPullParser xmlPullParser = factory.newPullParser();
-            is = mContext.openFileInput("appinfo.xml");
+        for(int i = 0; i < apps.getLength(); i++) {
+            // attributes들을 map 형태로 추출
+            NamedNodeMap map = apps.item(i).getAttributes();
+            // attribute id 가져오기
+            Node node = map.getNamedItem("id");
+            // 가져온 id의 값이 target과 동일하면
+            if(node.getNodeValue().equals(String.valueOf(target))) {
+                NodeList childNode = apps.item(i).getChildNodes();
+                for(int j = 0; j < childNode.getLength(); j++) {
 
-            xmlPullParser.setInput(is, null);
+                    findElement(apps.item(i).getChildNodes(), "url");
 
-            int eventType = xmlPullParser.getEventType();
-            int atriNum = -1;
-            while(eventType != XmlPullParser.END_DOCUMENT) {
-                switch (eventType) {
-                    case XmlPullParser.START_TAG: {
-                        if(Integer.parseInt(xmlPullParser.getAttributeValue(0)) == target)
-                            while(xmlPullParser.getName().equals("id")) { atriNum++; }
-                        if(atriNum > -1) {
-
-                        }
-
-                        break;
-                    }
+                    break;
                 }
-                eventType = xmlPullParser.next();
+                break;
+                /*
+                Log.e("editXml", childNode.item(1).getNodeName());
+                childNode.item(1).setTextContent("google.com");
+                Log.e("editXml", childNode.item(1).getNodeName());
+                */
             }
-
-        } catch (XmlPullParserException | FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+            //txt.setText(node.getNodeValue());
         }
-        // 파일의 끝까지 반복
-            // 스타트 태그를 읽는다.
-            // 만약 태그에 attribute가 있다면
-                // attribute id를 찾고, 수정하고자 하는 id와 동일하다면
-                    // 해당 태그의 자식들 중 url 태그를 찾을 때까지 반복, url 태그를 찾았다면
-                        // 변경되는 url로 수정한다
-                        // loop 탈출
-            // 만약 잘못된 접근(다른 이름의 파일, 없는 파일, 존재하지 않는 태그 등)이면 오류문을 출력하고 파일을 닫는다.
-        // 파일을 성공적으로 수정했으면, re-parsing 과정을 거쳐서 arrayList appInfos에 반영한다
-
-        XmlSerializer serializer = Xml.newSerializer();
-        // xml file formating func 만들기
-        StringWriter writer = new StringWriter();
-
+        TransformerFactory transformerFactory = TransformerFactory.newInstance();
+        Transformer transformer = transformerFactory.newTransformer();
+        DOMSource domSource = new DOMSource(document);
+        /*
+        StreamResult result = new StreamResult(mContext.getAssets().open("appinfo.xml"), Context.MODE_PRIVATE));
         try {
-            serializer.setOutput(writer);
-            serializer.startDocument("UTF-8", true);
-            serializer.startTag("", "apps");
-
-            for(AppInfo app: appInfos) {
-                serializer.startTag()
+            transformer.transform(domSource, result);
+        } catch (TransformerException e) {
+            e.printStackTrace();
+        }
+        */
+    }
+    public void findElement(NodeList appChild, String element) {
+        for(int i = 0; i < appChild.getLength(); i++) {
+            if (appChild.item(i).getNodeName().equals(element)) {
+                appChild.item(i+1).setNodeValue("google");
+                String str = appChild.item(i+1).getNodeValue();
             }
         }
-
+    }
+    public void writeUrl(Node node, String input) {
+        node.setTextContent(input);
     }
 
     private void printApps(ArrayList<AppInfo> apps) {
         StringBuilder builder = new StringBuilder();
 
         for(AppInfo app : apps) {
-            builder.append(app.getIv_profile()).append("\n").
-                    append(app.getTv_lecturer()).append("\n").
-                    append(app.getTv_content()).append("\n").
+            builder.append(app.getProfile()).append("\n").
+                    append(app.getLecturer()).append("\n").
+                    append(app.getContent()).append("\n").
                     append(app.getUrl()).append("\n").
                     append(app.getId()).append("\n\n");
         }
