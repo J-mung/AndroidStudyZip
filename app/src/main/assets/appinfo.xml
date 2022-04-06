@@ -1,59 +1,43 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<apps>
-    <app>
-        <iv_profile>R.mipmap.ic_launcher</iv_profile>
+<feed>
+    <app id="1" profile="R.mipmap.ic_launcher">
         <tv_lecturer>홍드로이드</tv_lecturer>
         <tv_content>IntentExamMain</tv_content>
         <url>https://meal-coding.tistory.com/22</url>
-        <id>1</id>
     </app>
-    <app>
-        <iv_profile>R.mipmap.ic_launcher</iv_profile>
+    <app id="2" profile="R.mipmap.ic_launcher">
         <tv_lecturer>홍드로이드</tv_lecturer>
         <tv_content>EditTextExample</tv_content>
         <url>https://meal-coding.tistory.com/22</url>
-        <id>2</id>
     </app>
-    <app>
-        <iv_profile>R.mipmap.ic_launcher</iv_profile>
+    <app id="3" profile="R.mipmap.ic_launcher">
         <tv_lecturer>홍드로이드</tv_lecturer>
         <tv_content>ServiceExam</tv_content>
         <url></url>
-        <id>3</id>
     </app>
-    <app>
-        <iv_profile>R.mipmap.ic_launcher</iv_profile>
+    <app id="4" profile="R.mipmap.ic_launcher">
         <tv_lecturer>홍드로이드</tv_lecturer>
         <tv_content>WebViewExam</tv_content>
         <url></url>
-        <id>4</id>
     </app>
-    <app>
-        <iv_profile>R.mipmap.ic_launcher</iv_profile>
+    <app id="5" profile="R.mipmap.ic_launcher">
         <tv_lecturer>홍드로이드</tv_lecturer>
         <tv_content>SpinnerExam</tv_content>
         <url></url>
-        <id>5</id>
     </app>
-    <app>
-        <iv_profile>R.mipmap.ic_launcher</iv_profile>
+    <app id="6" profile="R.mipmap.ic_launcher">
         <tv_lecturer>홍드로이드</tv_lecturer>
         <tv_content>LoadingAniExam</tv_content>
         <url></url>
-        <id>6</id>
     </app>
-    <app>
-        <iv_profile>R.mipmap.ic_launcher</iv_profile>
+    <app id="7" profile="R.mipmap.ic_launcher">
         <tv_lecturer>홍드로이드</tv_lecturer>
         <tv_content>GoogleMapExam</tv_content>
         <url></url>
-        <id>7</id>
     </app>
-    <app>
-        <iv_profile>R.mipmap.ic_launcher</iv_profile>
+    <app id="8" profile="R.mipmap.ic_launcher">
         <tv_lecturer>홍드로이드</tv_lecturer>
         <tv_content>CameraExam</tv_content>
         <url>https://meal-coding.tistory.com/27</url>
-        <id>8</id>
     </app>
-</apps>
+</feed>

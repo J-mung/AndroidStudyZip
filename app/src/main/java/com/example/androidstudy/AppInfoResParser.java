@@ -32,27 +32,34 @@ public class AppInfoResParser {
     private final static String ns = null;
     private final static String FILENAME = "appinfo.xml";
     private ArrayList<AppInfo> appInfos;
-    private Context mContext;
 
-    public AppInfoResParser() {
-        appInfos = null;
-        mContext = null;
-    }
-    public AppInfoResParser(Context mContext) {
-        appInfos = null;
-        this.mContext = mContext;
-    }
-
-    public void parseXML(XmlPullParser parser) {
+    public void parseXML(Context mContext, XmlPullParser parser) {
         try {
             //parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
             //parser.nextTag();
             //this.appInfos = readFeed(parser);
             this.appInfos = processParse(parser);
-            writeFile(null, appInfos);
+            writeFile(mContext, null, appInfos);
         } catch (XmlPullParserException | IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public ArrayList<AppInfo> editXmlFile(Context mContext, int targetId, String editText) throws XmlPullParserException, IOException {
+        XmlPullParser parser = Xml.newPullParser();
+        try {
+            parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
+            FileInputStream fiStream = mContext.openFileInput(FILENAME);
+            parser.setInput(fiStream, null);
+        } catch (XmlPullParserException e) {
+            e.printStackTrace();
+        }
+        parser.nextTag();
+        appInfos = readFeed(parser);
+        appInfos.get(targetId).setUrl(editText);
+        writeFile(mContext, null, appInfos);
+
+        return appInfos;
     }
 
     // 확장성이 좋게 개선 필요
@@ -94,18 +101,18 @@ public class AppInfoResParser {
         return apps;
     }
 
-    private ArrayList<AppInfo> readFeed(XmlPullParser parser) throws XmlPullParserException, IOException {
+    private ArrayList<AppInfo> readFeed(XmlPullParser parser) throws IOException, XmlPullParserException {
         ArrayList<AppInfo> apps = new ArrayList<>();
 
         // Below statment will initially queue your cursor to the feed element's start tag : <feed>
-        //parser.require(XmlPullParser.START_TAG, ns, "feed");
+        parser.require(XmlPullParser.START_TAG, ns, "feed");
         while(parser.next() != XmlPullParser.END_TAG) {
             if(parser.getEventType() != XmlPullParser.START_TAG) {
                 continue;
             }
             String name = parser.getName();
             // Starts by looking for the app tag
-            if(name.equals("app")) {
+            if (name.equals("app")) {
                 apps.add(readApp(parser));
             } else {
                 skip(parser);
@@ -114,45 +121,47 @@ public class AppInfoResParser {
         return apps;
     }
 
-    private AppInfo readApp(XmlPullParser parser) throws XmlPullParserException, IOException {
-        //parser.require(XmlPullParser.START_TAG, ns, "app");
-        String lecturer = null;
-        String content = null;
+    private AppInfo readApp(XmlPullParser parser) throws  XmlPullParserException, IOException {
+        parser.require(XmlPullParser.START_TAG, ns, "app");
+        String iv_profile = null;
+        String tv_lecturer = null;
+        String tv_content = null;
         String url = null;
-        int id = 0;
-        int profile = 0;
+        String id = null;
 
+        // get attribute
         for(int i = 0 ; i < parser.getAttributeCount(); i++) {
             String atrName = parser.getAttributeName(i);
             if(atrName.equals("id"))
-                id = Integer.parseInt(parser.getAttributeValue(i));
+                id = parser.getAttributeValue(i);
             else if(atrName.equals("profile"))
-                profile = Integer.parseInt(parser.getAttributeValue(null, "profile"));
+                iv_profile = parser.getAttributeValue(null, "iv_profile");
         }
-
+        // get app's children info
         while(parser.next() != XmlPullParser.END_TAG) {
             if(parser.getEventType() != XmlPullParser.START_TAG) {
                 continue;
             }
             String name = parser.getName();
             if(name.equals("lecturer")) {
-                lecturer = readTarget(parser, "lecturer");
+                tv_lecturer = readTarget(parser, "lecturer");
             } else if(name.equals("content")) {
-                content = readTarget(parser, "content");
+                tv_content = readTarget(parser, "content");
             } else if(name.equals("url")) {
                 url = readTarget(parser, "url");
             } else {
                 skip(parser);
             }
         }
-        return (new AppInfo(R.mipmap.ic_launcher_round, lecturer, content, url, id));
+
+        return (new AppInfo(R.mipmap.ic_launcher, tv_lecturer, tv_content, url, Integer.parseInt(id)));
         //return (new AppInfo(profile, lecturer, content, url, id));
     }
 
     private String readTarget(XmlPullParser parser, String target) throws XmlPullParserException, IOException {
-        //parser.require(XmlPullParser.START_TAG, ns, target);
+        parser.require(XmlPullParser.START_TAG, ns, target);
         String text = readText(parser);
-        //parser.require(XmlPullParser.END_TAG, ns, target);
+        parser.require(XmlPullParser.END_TAG, ns, target);
         return text;
     }
 
@@ -201,14 +210,32 @@ public class AppInfoResParser {
             e.printStackTrace();
         }
 
-        NodeList node = doc.getElementsByTagName("app");
+        NodeList child = null;
+        NodeList childchild = null;
+        NodeList node = doc.getElementsByTagName("app");        // app 태그들의 목록
+        for(int i = 0; i < node.getLength(); i++) {
+            if(node.item(i).getAttributes().equals(String.valueOf(target))) {
+                child = node.item(i).getChildNodes();
+            }
+        }
+        for(int i = 0; i < child.getLength(); i++) {
+            if(child.item(i).getNodeName().equals("url")) {
+                childchild = child.item(i).getChildNodes();
+            }
+        }
+
+        child = node.item(1).getChildNodes();          // app 태그들의 목록 중 하나를 선택하고 하위 태그들의 리스트 추출
+        childchild = child.item(1).getChildNodes();    // 하위 태그 리스트들 중 하나 선택
+        String childchildStr = childchild.item(0).getNodeValue();  // 하위 태그의 text추출
+        childchild.item(0).setTextContent(editStr);
+        childchildStr = childchild.item(0).getNodeValue();
         node.item(1).getNodeName();
     }
 
-    public void writeFile(String fileName, ArrayList<AppInfo> apps) {
+    public void writeFile(Context mContext, String fileName, ArrayList<AppInfo> apps) {
         if(fileName == null)
             fileName = FILENAME;
-        if(isExternalStorageWritable() && checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+        if(isExternalStorageWritable() && checkPermission(mContext, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
             try {
                 FileOutputStream fos = mContext.openFileOutput(fileName, Context.MODE_PRIVATE);
                 //FileOutputStream fos = new FileOutputStream(file, MODE_PRIVATE);
@@ -266,7 +293,7 @@ public class AppInfoResParser {
         }
     }
 
-    public boolean checkPermission(String permission) {
+    public boolean checkPermission(Context mContext, String permission) {
         int check = ContextCompat.checkSelfPermission(mContext, permission);
         if (check == PackageManager.PERMISSION_GRANTED)
             return true;

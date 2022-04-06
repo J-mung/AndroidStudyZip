@@ -19,21 +19,22 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
+import org.xmlpull.v1.XmlPullParserException;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class MainAdapter extends RecyclerView.Adapter<MainAdapter.CustomViewHolder> {
 
     private ArrayList<AppInfo> appInfos;
-    //private OnItemClick mCallback;              // 클릭된 아이템의 이름을 mainActivity로 반환하기 위한 listener
     private Context mContext;
     private SparseBooleanArray selectedItems = new SparseBooleanArray();    // 다중 선택시 선택한 position에 대한 item 정보를 보관하는 객체
     public MainAdapter(Context context, ArrayList<AppInfo> arrayList) {
         appInfos = arrayList;
         this.mContext = context;
-    //    this.mCallback = listener;
     }
 
     @NonNull
@@ -117,11 +118,11 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.CustomViewHold
         ad.setIcon(R.mipmap.ic_launcher_round);
         ad.setTitle(appInfos.get(appId).getContent());
         ad.setMessage("등록된 url가 없습니다. url를 설정해주세요.");
-        AppInfoResParser resParser = new AppInfoResParser(mContext);
+        AppInfoResParser resParser = new AppInfoResParser();
 
         // test setting url func
         final EditText et = new EditText(mContext);
-        et.setText("https://www.google.com");
+        et.setHint("https://www.google.com");
         ad.setView(et);
 
         ad.setPositiveButton("확인", new DialogInterface.OnClickListener() {
@@ -129,14 +130,13 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.CustomViewHold
             public void onClick(DialogInterface dialogInterface, int i) {
                 String result = et.getText().toString();
                 Log.e("editXml", "xmlParser() call");
-                FileInputStream fis = null;
                 try {
-                    fis = new FileInputStream(new File(mContext.getFilesDir(), "appinfo.xml"));
-                } catch (FileNotFoundException e) {
+                    appInfos = resParser.editXmlFile(mContext, appId, result);
+                } catch (XmlPullParserException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
                     e.printStackTrace();
                 }
-                resParser.setXmlUrl(fis,6, result);
-                //appInfos.get(appId).setUrl(result);
                 dialogInterface.dismiss();
             }
         });

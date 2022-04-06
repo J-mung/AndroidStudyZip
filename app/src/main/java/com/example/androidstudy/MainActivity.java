@@ -39,22 +39,10 @@ public class MainActivity extends AppCompatActivity {
         linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);
 
-/*      using AppInfoXmlParser object
-        // #1 appinfo.xml 파일에서 예제들의 정보 parsing (#2을 개선한 것)
-        AppInfoXmlParser appInfoXmlParser = new AppInfoXmlParser();
-
-        try {
-            appInfoXmlParser.parseXML(getAssets().open("appinfo.xml"));
-            appInfos = appInfoXmlParser.getAppInfos();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-*/
         // using AppInfoResParser object
-        AppInfoResParser resParser = new AppInfoResParser(getApplicationContext());
+        AppInfoResParser resParser = new AppInfoResParser();
 
-        resParser.parseXML(getResources().getXml(R.xml.appinfores));
+        resParser.parseXML(getApplicationContext(), getResources().getXml(R.xml.appinfores));
         appInfos = resParser.getAppInfos();
 
         // 리사이클러뷰에 mainAdapter 객체 지정
