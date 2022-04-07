@@ -1,11 +1,27 @@
 package com.example.androidstudy;
 
 public class AppInfo {
-    private int iv_profile;
-    private String tv_lecturer;
-    private String tv_content;
+    private int profile;
+    private String lecturer;
+    private String content;
     private String url;
     private int id;
+
+    public AppInfo() {
+        profile = 0;
+        lecturer = null;
+        content = null;
+        url = null;
+        id = 0;
+    }
+
+    public AppInfo(int profile, String lecturer, String content, String url, int id) {
+        this.profile = profile;
+        this.lecturer = lecturer;
+        this.content = content;
+        this.url = url;
+        this.id = id;
+    }
 
     public String getUrl() {
         return url;
@@ -23,27 +39,25 @@ public class AppInfo {
         this.id = id;
     }
 
-    public int getIv_profile() {
-        return iv_profile;
+    public int getProfile() { return profile; }
+
+    public void setProfile(int iv_profile) {
+        this.profile = iv_profile;
     }
 
-    public void setIv_profile(int iv_profile) {
-        this.iv_profile = iv_profile;
+    public String getLecturer() {
+        return lecturer;
     }
 
-    public String getTv_lecturer() {
-        return tv_lecturer;
+    public void setLecturer(String lecturer) {
+        this.lecturer = lecturer;
     }
 
-    public void setTv_lecturer(String tv_lecturer) {
-        this.tv_lecturer = tv_lecturer;
+    public String getContent() {
+        return content;
     }
 
-    public String getTv_content() {
-        return tv_content;
-    }
-
-    public void setTv_content(String tv_content) {
-        this.tv_content = tv_content;
+    public void setContent(String content) {
+        this.content = content;
     }
 }

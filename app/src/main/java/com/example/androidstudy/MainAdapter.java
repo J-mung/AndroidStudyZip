@@ -1,38 +1,38 @@
 package com.example.androidstudy;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebChromeClient;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
+import org.xmlpull.v1.XmlPullParserException;
+
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class MainAdapter extends RecyclerView.Adapter<MainAdapter.CustomViewHolder> {
 
     private ArrayList<AppInfo> appInfos;
-    //private OnItemClick mCallback;              // 클릭된 아이템의 이름을 mainActivity로 반환하기 위한 listener
     private Context mContext;
     private SparseBooleanArray selectedItems = new SparseBooleanArray();    // 다중 선택시 선택한 position에 대한 item 정보를 보관하는 객체
-
     public MainAdapter(Context context, ArrayList<AppInfo> arrayList) {
         appInfos = arrayList;
         this.mContext = context;
-    //    this.mCallback = listener;
     }
 
     @NonNull
@@ -46,9 +46,9 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.CustomViewHold
 
     @Override
     public void onBindViewHolder(@NonNull MainAdapter.CustomViewHolder holder, int position) {
-        holder.iv_profile.setImageResource(appInfos.get(position).getIv_profile());
-        holder.tv_lecturer.setText(appInfos.get(position).getTv_lecturer());
-        holder.tv_content.setText(appInfos.get(position).getTv_content());
+        holder.iv_profile.setImageResource(appInfos.get(position).getProfile());
+        holder.tv_lecturer.setText(appInfos.get(position).getLecturer());
+        holder.tv_content.setText(appInfos.get(position).getContent());
         holder.tv_content_id.setText(String.valueOf(appInfos.get(position).getId()));
 
         holder.itemView.setTag(position);
@@ -73,7 +73,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.CustomViewHold
                         public void onClick(View view) {
                             Intent intent = null;
                             try {
-                                intent = new Intent(mContext, Class.forName("com.example.androidstudy." + appInfos.get(id).getTv_content()));
+                                intent = new Intent(mContext, Class.forName("com.example.androidstudy." + appInfos.get(id).getContent()));
                             } catch (ClassNotFoundException e) {
                                 e.printStackTrace();
                             }
@@ -86,16 +86,24 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.CustomViewHold
                         @Override
                         public void onClick(View view) {
                             Intent intent = null;
-                            intent = new Intent(mContext, WebViewExam.class);
-                            if(appInfos.get(id).getUrl().equals(""))
+                            if(appInfos.get(id).getUrl().equals("")) {
                                 Toast.makeText(mContext, "You need to set url", Toast.LENGTH_SHORT).show();
+                            }
                             else {
+                                intent = new Intent(mContext, WebViewExam.class);
                                 intent.putExtra("url", appInfos.get(id).getUrl());
                                 mContext.startActivity(intent);
                             }
                         }
                     });
                 }
+            }
+        });
+
+        holder.btn_setting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setUrlDialog(Integer.parseInt(holder.tv_content_id.getText().toString())-1);
             }
         });
 
@@ -109,6 +117,47 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.CustomViewHold
         });
     }
 
+    public void setUrlDialog(int appId) {
+        AlertDialog.Builder ad = new AlertDialog.Builder(mContext);
+        ad.setIcon(R.mipmap.ic_launcher_round);
+        ad.setTitle(appInfos.get(appId).getContent());
+        ad.setMessage("url를 설정해주세요.");
+        AppInfoXmlParser resParser = new AppInfoXmlParser();
+
+        // test setting url func
+        final EditText et = new EditText(mContext);
+        String url = appInfos.get(appId).getUrl();
+        if(url.equals(""))
+            et.setHint("https://www.google.com");
+        else
+            et.setText(url);
+        ad.setView(et);
+
+        ad.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                String result = et.getText().toString();
+                Log.e("editXml", "xmlParser() call");
+                try {
+                    appInfos = resParser.editXmlFile(mContext, appId, result);
+                } catch (XmlPullParserException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                dialogInterface.dismiss();
+            }
+        });
+
+        ad.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+        ad.show();
+    }
+
     @Override
     public int getItemCount() {
         return (null != appInfos ? appInfos.size() : 0);
@@ -119,6 +168,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.CustomViewHold
         protected TextView tv_lecturer, tv_content, tv_content_id;
         protected LinearLayout item_expand;
         protected Button btn_expand_url, btn_expand_start;
+        protected ImageButton btn_setting;
 
         public CustomViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -129,6 +179,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.CustomViewHold
             this.item_expand = (LinearLayout) itemView.findViewById(R.id.item_expend);
             this.btn_expand_url = (Button) itemView.findViewById(R.id.btn_expand_url);
             this.btn_expand_start = (Button) itemView.findViewById(R.id.btn_expand_start);
+            this.btn_setting = (ImageButton) itemView.findViewById(R.id.btn_setting);
         }
     }
 }

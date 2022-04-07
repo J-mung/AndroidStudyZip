@@ -4,15 +4,18 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.Manifest;
 import android.os.Bundle;
 import android.widget.Toast;
 
-import java.io.IOException;
+import com.gun0912.tedpermission.PermissionListener;
+import com.gun0912.tedpermission.TedPermission;
+
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    private ArrayList<MainData> appList;
     private MainAdapter mainAdapter;
     private RecyclerView recyclerView;
     private LinearLayoutManager linearLayoutManager;
@@ -24,21 +27,23 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        TedPermission.with(getApplicationContext())
+                .setPermissionListener(permissionListener)
+                .setRationaleMessage("파일 쓰기 권한이 필요합니다.")
+                .setDeniedMessage("권한을 거부하였습니다.")
+                .setPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                .check();
+
         // 리사이클러뷰에 LinearLayoutManager 객체 지정
         recyclerView = (RecyclerView) findViewById(R.id.recycler_main);
         linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);
 
-        // #1 appinfo.xml 파일에서 예제들의 정보 parsing (#2을 개선한 것)
-        XmlParser xmlParser = new XmlParser();
-        appInfos = new ArrayList<>();
+        // using AppInfoResParser object
+        AppInfoXmlParser resParser = new AppInfoXmlParser();
 
-        try {
-            xmlParser.parseXML(getAssets().open("appinfo.xml"));
-            appInfos = xmlParser.getAppInfos();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        resParser.parseXML(getApplicationContext(), getResources().getXml(R.xml.appinfores));
+        appInfos = resParser.getAppInfos();
 
         // 리사이클러뷰에 mainAdapter 객체 지정
         mainAdapter = new MainAdapter(MainActivity.this, appInfos);
@@ -59,4 +64,16 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this, "한번 더 누르면 종료됩니다.", Toast.LENGTH_SHORT).show();
         }
     }
+
+    PermissionListener permissionListener = new PermissionListener() {
+        @Override
+        public void onPermissionGranted() {
+            Toast.makeText(getApplicationContext(), "권한이 허용됨", Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onPermissionDenied(List<String> deniedPermissions) {
+            Toast.makeText(getApplicationContext(), "권한이 거부됨", Toast.LENGTH_SHORT).show();
+        }
+    };
 }
