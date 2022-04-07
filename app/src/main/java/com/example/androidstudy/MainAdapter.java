@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -21,9 +22,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import org.xmlpull.v1.XmlPullParserException;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -90,7 +88,6 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.CustomViewHold
                             Intent intent = null;
                             if(appInfos.get(id).getUrl().equals("")) {
                                 Toast.makeText(mContext, "You need to set url", Toast.LENGTH_SHORT).show();
-                                setUrlDialog(id);
                             }
                             else {
                                 intent = new Intent(mContext, WebViewExam.class);
@@ -100,6 +97,13 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.CustomViewHold
                         }
                     });
                 }
+            }
+        });
+
+        holder.btn_setting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setUrlDialog(Integer.parseInt(holder.tv_content_id.getText().toString())-1);
             }
         });
 
@@ -117,12 +121,16 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.CustomViewHold
         AlertDialog.Builder ad = new AlertDialog.Builder(mContext);
         ad.setIcon(R.mipmap.ic_launcher_round);
         ad.setTitle(appInfos.get(appId).getContent());
-        ad.setMessage("등록된 url가 없습니다. url를 설정해주세요.");
-        AppInfoResParser resParser = new AppInfoResParser();
+        ad.setMessage("url를 설정해주세요.");
+        AppInfoXmlParser resParser = new AppInfoXmlParser();
 
         // test setting url func
         final EditText et = new EditText(mContext);
-        et.setHint("https://www.google.com");
+        String url = appInfos.get(appId).getUrl();
+        if(url.equals(""))
+            et.setHint("https://www.google.com");
+        else
+            et.setText(url);
         ad.setView(et);
 
         ad.setPositiveButton("확인", new DialogInterface.OnClickListener() {
@@ -160,6 +168,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.CustomViewHold
         protected TextView tv_lecturer, tv_content, tv_content_id;
         protected LinearLayout item_expand;
         protected Button btn_expand_url, btn_expand_start;
+        protected ImageButton btn_setting;
 
         public CustomViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -170,6 +179,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.CustomViewHold
             this.item_expand = (LinearLayout) itemView.findViewById(R.id.item_expend);
             this.btn_expand_url = (Button) itemView.findViewById(R.id.btn_expand_url);
             this.btn_expand_start = (Button) itemView.findViewById(R.id.btn_expand_start);
+            this.btn_setting = (ImageButton) itemView.findViewById(R.id.btn_setting);
         }
     }
 }

@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(linearLayoutManager);
 
         // using AppInfoResParser object
-        AppInfoResParser resParser = new AppInfoResParser();
+        AppInfoXmlParser resParser = new AppInfoXmlParser();
 
         resParser.parseXML(getApplicationContext(), getResources().getXml(R.xml.appinfores));
         appInfos = resParser.getAppInfos();
