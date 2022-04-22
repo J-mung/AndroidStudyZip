@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">AndroidStudy</string>
+    <string name="button_selector">홍드로이드</string>
+    <string name="test">test</string>
 </resources>
