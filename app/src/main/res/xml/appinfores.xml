@@ -40,4 +40,9 @@
         <content>CameraExam</content>
         <url>https://meal-coding.tistory.com/27</url>
     </app>
+    <app id="9" profile="R.mipmap.ic_launcher">
+        <lecturer>홍드로이드</lecturer>
+        <content>ButtonSelectorExam</content>
+        <url></url>
+    </app>
 </feed>

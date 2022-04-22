@@ -36,7 +36,7 @@
             android:name=".LoadingAniExam"
             android:exported="false"/>
         <activity
-            android:name=".MusicPlayerExam"
+            android:name=".ButtonSelectorExam"
             android:exported="false"/>
         <activity
             android:name=".GoogleMapExam"
