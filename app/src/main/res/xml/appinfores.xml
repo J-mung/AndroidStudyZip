@@ -45,4 +45,9 @@
         <content>ButtonSelectorExam</content>
         <url></url>
     </app>
+    <app id="10" profile="R.mipmap.ic_launcher">
+        <lecturer>홍드로이드</lecturer>
+        <content>LoginActivity</content>
+        <url></url>
+    </app>
 </feed>
