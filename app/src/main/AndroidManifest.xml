@@ -18,49 +18,49 @@
         android:theme="@style/Theme.AndroidStudy"
         android:usesCleartextTraffic="true" >
         <activity
-            android:name=".BroadCastReceiverExam"
+            android:name=".activitys.BroadCastReceiverExam"
             android:exported="false" />
         <activity
-            android:name=".LoginActivity"
+            android:name=".activitys.login_system.LoginActivity"
             android:exported="false" />
         <activity
-            android:name=".RegisterActivity"
+            android:name=".activitys.login_system.RegisterActivity"
             android:exported="false" />
         <activity
-            android:name=".RegisterLoginExam"
+            android:name=".activitys.login_system.RegisterLoginExam"
             android:exported="false" />
         <activity
-            android:name=".EditTextExample"
+            android:name=".activitys.EditTextExample"
             android:exported="false" />
         <activity
-            android:name=".IntentExamMain"
+            android:name=".activitys.IntentExamMain"
             android:exported="false" />
         <activity
-            android:name=".IntentExamSub"
+            android:name=".activitys.IntentExamSub"
             android:exported="false" />
         <activity
-            android:name=".ServiceExam"
+            android:name=".activitys.ServiceExam"
             android:exported="false" />
         <activity
-            android:name=".WebViewExam"
+            android:name=".activitys.WebViewExam"
             android:exported="false" />
         <activity
-            android:name=".SpinnerExam"
+            android:name=".activitys.SpinnerExam"
             android:exported="false" />
         <activity
-            android:name=".LoadingAniExam"
+            android:name=".activitys.LoadingAniExam"
             android:exported="false" />
         <activity
-            android:name=".ButtonSelectorExam"
+            android:name=".activitys.ButtonSelectorExam"
             android:exported="false" />
         <activity
-            android:name=".GoogleMapExam"
+            android:name=".activitys.GoogleMapExam"
             android:exported="false" />
         <activity
-            android:name=".CameraExam"
+            android:name=".activitys.CameraExam"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".activitys.MainActivity"
             android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -69,7 +69,7 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".MusicService" />
+        <service android:name=".activitys.MusicService" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

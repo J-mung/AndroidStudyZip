@@ -1,6 +1,5 @@
-package com.example.androidstudy;
+package com.example.androidstudy.activitys;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 
@@ -20,12 +19,11 @@ import android.widget.Toast;
 
 import java.io.File;
 import java.io.IOException;
-import java.security.Permission;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.example.androidstudy.R;
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
 

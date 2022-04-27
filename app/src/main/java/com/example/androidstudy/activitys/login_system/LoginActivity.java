@@ -1,4 +1,4 @@
-package com.example.androidstudy;
+package com.example.androidstudy.activitys.login_system;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -12,6 +12,7 @@ import android.widget.Toast;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
+import com.example.androidstudy.R;
 
 import org.json.JSONException;
 import org.json.JSONObject;

@@ -1,10 +1,12 @@
-package com.example.androidstudy;
+package com.example.androidstudy.activitys.login_system;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.androidstudy.R;
 
 // 서버 : http://xorb1198.dothome.co.kr/myadmin
 

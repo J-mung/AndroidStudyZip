@@ -1,4 +1,4 @@
-package com.example.androidstudy;
+package com.example.androidstudy.activitys;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,6 +7,8 @@ import android.widget.Button;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.androidstudy.R;
 
 // background 환경 service가 유지되는 예제
 

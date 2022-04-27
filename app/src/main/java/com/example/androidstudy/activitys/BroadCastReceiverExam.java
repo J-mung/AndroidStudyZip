@@ -1,4 +1,4 @@
-package com.example.androidstudy;
+package com.example.androidstudy.activitys;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -6,6 +6,8 @@ import android.content.IntentFilter;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.widget.TextView;
+
+import com.example.androidstudy.R;
 
 public class BroadCastReceiverExam extends AppCompatActivity {
 

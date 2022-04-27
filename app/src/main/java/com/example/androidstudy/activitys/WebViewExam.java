@@ -1,7 +1,6 @@
-package com.example.androidstudy;
+package com.example.androidstudy.activitys;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
@@ -9,6 +8,8 @@ import android.webkit.WebViewClient;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.androidstudy.R;
 
 public class WebViewExam extends AppCompatActivity {
     private final static String DEFAULT_URL = "https://meal-coding.tistory.com/";

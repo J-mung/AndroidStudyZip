@@ -1,4 +1,4 @@
-package com.example.androidstudy;
+package com.example.androidstudy.activitys;
 
 import android.os.Bundle;
 import android.view.View;
@@ -9,6 +9,8 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.androidstudy.R;
 
 public class EditTextExample extends AppCompatActivity {
     EditText et_id;

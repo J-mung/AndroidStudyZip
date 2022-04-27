@@ -1,4 +1,4 @@
-package com.example.androidstudy;
+package com.example.androidstudy.activitys;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -8,6 +8,10 @@ import android.Manifest;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import com.example.androidstudy.AppInfo;
+import com.example.androidstudy.AppInfoXmlParser;
+import com.example.androidstudy.MainAdapter;
+import com.example.androidstudy.R;
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
 

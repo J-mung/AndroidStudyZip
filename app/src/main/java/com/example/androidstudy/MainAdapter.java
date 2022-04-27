@@ -20,6 +20,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.androidstudy.activitys.WebViewExam;
+
 import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
@@ -73,7 +75,10 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.CustomViewHold
                         public void onClick(View view) {
                             Intent intent = null;
                             try {
-                                intent = new Intent(mContext, Class.forName("com.example.androidstudy." + appInfos.get(id).getContent()));
+                                String path = "com.example.androidstudy.activitys." + appInfos.get(id).getContent();
+                                if (Class.forName(path) == null)
+                                    path = "com.example.androidstudy.activitys.login_system." + appInfos.get(id).getContent();
+                                intent = new Intent(mContext, Class.forName(path));
                             } catch (ClassNotFoundException e) {
                                 e.printStackTrace();
                             }
