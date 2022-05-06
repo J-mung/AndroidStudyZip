@@ -28,7 +28,14 @@
             android:exported="false" />
         <activity
             android:name=".activitys.login_system.LoginActivity"
-            android:exported="false" />
+            android:exported="true" >
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".activitys.login_system.RegisterActivity"
             android:exported="false" />
@@ -67,12 +74,7 @@
             android:exported="false" />
         <activity
             android:name=".activitys.MainActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            android:exported="false">
         </activity>
 
         <service android:name=".activitys.MusicService" />

@@ -74,13 +74,18 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.CustomViewHold
                         @Override
                         public void onClick(View view) {
                             Intent intent = null;
+                            String path = null;
                             try {
-                                String path = "com.example.androidstudy.activitys." + appInfos.get(id).getContent();
-                                if (Class.forName(path) == null)
-                                    path = "com.example.androidstudy.activitys.login_system." + appInfos.get(id).getContent();
+                                path = "com.example.androidstudy.activitys." + appInfos.get(id).getContent();
                                 intent = new Intent(mContext, Class.forName(path));
-                            } catch (ClassNotFoundException e) {
+                            } catch (Exception e) {
                                 e.printStackTrace();
+                                path = "com.example.androidstudy.activitys.login_system." + appInfos.get(id).getContent();
+                                try {
+                                    intent = new Intent(mContext, Class.forName(path));
+                                } catch (ClassNotFoundException classNotFoundException) {
+                                    classNotFoundException.printStackTrace();
+                                }
                             }
                             mContext.startActivity(intent);
                         }

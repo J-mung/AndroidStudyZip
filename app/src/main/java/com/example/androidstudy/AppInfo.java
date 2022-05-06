@@ -1,6 +1,8 @@
 package com.example.androidstudy;
 
-public class AppInfo {
+import java.io.Serializable;
+
+public class AppInfo implements Serializable {
     private int profile;
     private String lecturer;
     private String content;
