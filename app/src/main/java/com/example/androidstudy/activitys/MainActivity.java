@@ -5,6 +5,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
 
@@ -43,6 +44,11 @@ public class MainActivity extends AppCompatActivity {
         linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);
 
+        // Get appinfos from DB
+        Intent intent = getIntent();
+        Bundle args = intent.getBundleExtra("appInfos");
+        ArrayList<AppInfo> loadInfoFromDB = (ArrayList<AppInfo>) args.getSerializable("ARRAYLIST");
+
         // using AppInfoResParser object
         AppInfoXmlParser resParser = new AppInfoXmlParser();
 
@@ -50,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
         appInfos = resParser.getAppInfos();
 
         // 리사이클러뷰에 mainAdapter 객체 지정
-        mainAdapter = new MainAdapter(MainActivity.this, appInfos);
+        mainAdapter = new MainAdapter(MainActivity.this, loadInfoFromDB);
         recyclerView.setAdapter(mainAdapter);
         mainAdapter.notifyDataSetChanged();
     }
