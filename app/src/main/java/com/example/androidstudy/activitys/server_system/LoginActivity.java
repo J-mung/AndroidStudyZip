@@ -1,4 +1,4 @@
-package com.example.androidstudy.activitys.login_system;
+package com.example.androidstudy.activitys.server_system;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -13,6 +13,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
 import com.example.androidstudy.R;
+import com.example.androidstudy.activitys.MainActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -58,7 +59,7 @@ public class LoginActivity extends AppCompatActivity {
                                 String loginPassword = jsonObject.getString("userPassword");
 
                                 Toast.makeText(getApplicationContext(), "로그인이 성공하였습니다.", Toast.LENGTH_SHORT).show();
-                                Intent intent = new Intent(LoginActivity.this, RegisterLoginExam.class);
+                                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                                 intent.putExtra("loginID", loginID);
                                 intent.putExtra("loginPassword", loginPassword);
                                 startActivity(intent);

@@ -57,8 +57,9 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.CustomViewHold
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // 선택된 content의 name, url 등의 정보를 appInfos에서 쉽게 얻기 위해 id값 활용
-                int id = Integer.parseInt(holder.tv_content_id.getText().toString())-1;
+                // 선택된 content의 name, url 등의 정보를 appInfos에서 쉽게 얻기 위해 idx값 활용
+                int idx = 0;
+                while(appInfos.get(idx).getContent() != holder.tv_content.getText()) { idx++; }
 
                 // get()는 position값이 존재하면 true를 반환함
                 if (selectedItems.get(holder.getAdapterPosition())) { // VISIBLE -> INVISIBLE
@@ -75,9 +76,9 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.CustomViewHold
                         public void onClick(View view) {
                             Intent intent = null;
                             try {
-                                String path = "com.example.androidstudy.activitys." + appInfos.get(id).getContent();
+                                String path = "com.example.androidstudy.activitys." + holder.tv_content.getText();
                                 if (Class.forName(path) == null)
-                                    path = "com.example.androidstudy.activitys.login_system." + appInfos.get(id).getContent();
+                                    path = "com.example.androidstudy.activitys.server_system." + holder.tv_content.getText();
                                 intent = new Intent(mContext, Class.forName(path));
                             } catch (ClassNotFoundException e) {
                                 e.printStackTrace();
@@ -87,16 +88,17 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.CustomViewHold
                     });
 
                     // btn_expand_url event
+                    int finalIdx = idx;
                     holder.btn_expand_url.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
                             Intent intent = null;
-                            if(appInfos.get(id).getUrl().equals("")) {
+                            if(appInfos.get(finalIdx).getUrl().equals("")) {
                                 Toast.makeText(mContext, "You need to set url", Toast.LENGTH_SHORT).show();
                             }
                             else {
                                 intent = new Intent(mContext, WebViewExam.class);
-                                intent.putExtra("url", appInfos.get(id).getUrl());
+                                intent.putExtra("url", appInfos.get(finalIdx).getUrl());
                                 mContext.startActivity(intent);
                             }
                         }

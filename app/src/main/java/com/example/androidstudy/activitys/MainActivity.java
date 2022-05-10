@@ -5,13 +5,17 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.androidstudy.AppInfo;
 import com.example.androidstudy.AppInfoXmlParser;
 import com.example.androidstudy.MainAdapter;
 import com.example.androidstudy.R;
+import com.example.androidstudy.activitys.server_system.AddDataForm;
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
 
@@ -25,11 +29,15 @@ public class MainActivity extends AppCompatActivity {
     private LinearLayoutManager linearLayoutManager;
     ArrayList<AppInfo> appInfos;
     private long backBtnTime = 0;
+    private Button btn_addExam;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Intent intent= getIntent();
+        String userID = intent.getStringExtra("userID");
 
         TedPermission.with(getApplicationContext())
                 .setPermissionListener(permissionListener)
@@ -53,6 +61,16 @@ public class MainActivity extends AppCompatActivity {
         mainAdapter = new MainAdapter(MainActivity.this, appInfos);
         recyclerView.setAdapter(mainAdapter);
         mainAdapter.notifyDataSetChanged();
+
+        btn_addExam = (Button) findViewById(R.id.btn_addExam);
+        btn_addExam.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AddDataForm addDataForm = new AddDataForm( MainActivity.this, userID);
+                addDataForm.showCustomDialog();
+
+            }
+        });
     }
 
     @Override

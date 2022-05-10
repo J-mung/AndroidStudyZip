@@ -28,6 +28,9 @@ public class AppInfo {
     }
 
     public void setUrl(String url) {
+        if(url == null) {
+            url = "";
+        }
         this.url = url;
     }
 
@@ -50,6 +53,9 @@ public class AppInfo {
     }
 
     public void setLecturer(String lecturer) {
+        if(lecturer == null) {
+            lecturer = "HONG_DROID";
+        }
         this.lecturer = lecturer;
     }
 
@@ -58,6 +64,9 @@ public class AppInfo {
     }
 
     public void setContent(String content) {
+        if(content == null) {
+            content = "Sample";
+        }
         this.content = content;
     }
 }
