@@ -1,4 +1,4 @@
-package com.example.androidstudy.activitys.login_system;
+package com.example.androidstudy.activitys.server_system;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -70,7 +70,11 @@ public class LoginActivity extends AppCompatActivity {
 
                             if(loginSuccess) { // 로그인이 성공한 경우
                                 Toast.makeText(getApplicationContext(), "로그인이 성공하였습니다.", Toast.LENGTH_SHORT).show();
-                                //intent.putExtra("loginPassword", loginPassword);
+
+                                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                intent.putExtra("loginID", loginID);
+                                intent.putExtra("loginPassword", loginPassword);
+                                startActivity(intent);
                             } else { // 로그인이 실패한 경우
                                 Toast.makeText(getApplicationContext(), "로그인이 실패하였습니다.", Toast.LENGTH_SHORT).show();
                                 return;

@@ -1,18 +1,23 @@
 package com.example.androidstudy.activitys;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.androidstudy.AppInfo;
 import com.example.androidstudy.AppInfoXmlParser;
 import com.example.androidstudy.MainAdapter;
 import com.example.androidstudy.R;
+import com.example.androidstudy.activitys.server_system.AddDataDialog;
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
 
@@ -26,18 +31,27 @@ public class MainActivity extends AppCompatActivity {
     private LinearLayoutManager linearLayoutManager;
     ArrayList<AppInfo> appInfos;
     private long backBtnTime = 0;
+    private Button btn_addExam;
+    private FragmentManager fragmentManager;
+    private FragmentTransaction transaction;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // check permission
         TedPermission.with(getApplicationContext())
                 .setPermissionListener(permissionListener)
                 .setRationaleMessage("파일 쓰기 권한이 필요합니다.")
                 .setDeniedMessage("권한을 거부하였습니다.")
                 .setPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 .check();
+
+        // get user's ID
+        Intent intent= getIntent();
+        String userID = intent.getStringExtra("userID");
+
 
         // 리사이클러뷰에 LinearLayoutManager 객체 지정
         recyclerView = (RecyclerView) findViewById(R.id.recycler_main);
@@ -59,6 +73,20 @@ public class MainActivity extends AppCompatActivity {
         mainAdapter = new MainAdapter(MainActivity.this, loadInfoFromDB);
         recyclerView.setAdapter(mainAdapter);
         mainAdapter.notifyDataSetChanged();
+
+        fragmentManager = getSupportFragmentManager();
+
+        transaction = fragmentManager.beginTransaction();
+
+        btn_addExam = (Button) findViewById(R.id.btn_addExam);
+        btn_addExam.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                AddDataDialog df = new AddDataDialog(userID);
+                df.show(getSupportFragmentManager(), "PopAddFormDialogFragment");
+            }
+        });
     }
 
     @Override

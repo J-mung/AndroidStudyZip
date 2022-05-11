@@ -5,4 +5,27 @@
         <item>array로해야만</item>
         <item>entries에 들어가는거?</item>
     </string-array>
+
+    <array name= "autosize_text_sizes">
+        <item>12sp</item>
+        <item>14sp</item>
+        <item>16sp</item>
+        <item>20sp</item>
+        <item>30sp</item>
+    </array>
+
+    <string-array name="exam_content_name">
+        <item>IntentExamMain</item>
+        <item>EditTextExample</item>
+        <item>ServiceExam</item>
+        <item>WebViewExam</item>
+        <item>SpinnerExam</item>
+        <item>LoadingAniExam</item>
+        <item>GoogleMapExam</item>
+        <item>CameraExam</item>
+        <item>ButtonSelectorExam</item>
+        <item>LoginActivity</item>
+        <item>BroadCastReceiverExam</item>
+        <item>VideoViewExam</item>
+    </string-array>
 </resources>

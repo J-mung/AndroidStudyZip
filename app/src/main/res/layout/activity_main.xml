@@ -4,7 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activitys.MainActivity">
+    tools:context=".activitys.MainActivity"
+    android:orientation="vertical"
+    android:weightSum="5">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_main"
@@ -12,12 +14,15 @@
         android:layout_height="match_parent"
         android:scrollbarFadeDuration="0"
         android:scrollbarSize="5dp"
-        android:scrollbarThumbVertical="@android:color/darker_gray"/>
+        android:scrollbarThumbVertical="@android:color/darker_gray"
+        android:layout_weight="4"/>
 
-    <WebView
-        android:id="@+id/webView_detail_url"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone"/>
+    <Button
+        android:id="@+id/btn_addExam"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="ADD"
+        android:layout_weight="1"
+        android:layout_gravity="center"/>
 
 </LinearLayout>

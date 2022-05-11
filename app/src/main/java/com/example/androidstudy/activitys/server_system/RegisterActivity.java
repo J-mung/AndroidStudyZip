@@ -1,4 +1,4 @@
-package com.example.androidstudy.activitys.login_system;
+package com.example.androidstudy.activitys.server_system;
 
 import androidx.appcompat.app.AppCompatActivity;
 
