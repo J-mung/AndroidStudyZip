@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class AddDataRequest extends StringRequest {
-    final static private String URL = "http://xorb1198.dothome.co.kr/AddData.php";
+    final static private String URL = "http://xorb1198.dothome.co.kr/AddExam.php";
     private Map<String, String> map;
 
     public AddDataRequest(String userID, AppInfo appinfo, Response.Listener<String> listener) {

@@ -12,15 +12,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
-        android:hint="press"
+        android:hint="Content"
         android:padding="20dp">
 
         <AutoCompleteTextView
-            android:id="@+id/tv_content_item"
+            android:id="@+id/actv_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="none" />
-
+            android:inputType="none"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -33,12 +32,12 @@
         android:padding="20dp">
 
         <AutoCompleteTextView
-            android:id="@+id/tv_lecturer"
+            android:id="@+id/actv_lecturer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textPersonName"
             android:padding="16dp"
-            android:layout_margin="2dp" />
+            android:layout_margin="2dp"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -51,11 +50,33 @@
         android:padding="20dp">
 
         <AutoCompleteTextView
-            android:id="@+id/tv_url"
+            android:id="@+id/actv_url"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="text"
             android:padding="16dp"
             android:layout_margin="2dp" />
     </com.google.android.material.textfield.TextInputLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="2">
+
+        <Button
+            android:id="@+id/btn_dialog_cancle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="CANCLE"
+            android:layout_weight="1"/>
+
+        <Button
+            android:id="@+id/btn_dialog_confirm"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="CONFIRM"
+            android:layout_weight="1"/>
+
+    </LinearLayout>
+
 </LinearLayout>
