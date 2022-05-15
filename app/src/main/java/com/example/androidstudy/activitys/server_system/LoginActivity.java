@@ -2,7 +2,6 @@ package com.example.androidstudy.activitys.server_system;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.DownloadManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,12 +10,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.androidstudy.AppInfo;
 import com.example.androidstudy.R;
@@ -28,14 +23,13 @@ import org.json.JSONObject;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 public class LoginActivity extends AppCompatActivity {
 
     private EditText et_loginID, et_loginPassword;
     private Button btn_login, btn_register;
     private boolean loginSuccess;
+    private Intent intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,8 +52,8 @@ public class LoginActivity extends AppCompatActivity {
         btn_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String loginID = et_loginID.getText().toString();
-                String loginPassword = et_loginPassword.getText().toString();
+                String userID = et_loginID.getText().toString();
+                String userPassword = et_loginPassword.getText().toString();
 
                 Response.Listener<String> loginListener = new Response.Listener<String>() {
                     @Override
@@ -71,10 +65,9 @@ public class LoginActivity extends AppCompatActivity {
                             if(loginSuccess) { // 로그인이 성공한 경우
                                 Toast.makeText(getApplicationContext(), "로그인이 성공하였습니다.", Toast.LENGTH_SHORT).show();
 
-                                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                                intent.putExtra("loginID", loginID);
-                                intent.putExtra("loginPassword", loginPassword);
-                                startActivity(intent);
+                                intent = new Intent(LoginActivity.this, MainActivity.class);
+                                intent.putExtra("userID", userID);
+                                intent.putExtra("userPassword", userPassword);
                             } else { // 로그인이 실패한 경우
                                 Toast.makeText(getApplicationContext(), "로그인이 실패하였습니다.", Toast.LENGTH_SHORT).show();
                                 return;
@@ -106,13 +99,12 @@ public class LoginActivity extends AppCompatActivity {
                                     newinfo.setUrl(item.getString("url"));
                                     // profile 이미지를 설정해두지 않으면 recyclerview에서 item을 표시하지 못하는 버그
                                     // 따라서 임의로 이미지 지정
-                                    newinfo.setProfile(R.mipmap.ic_launcher_round);
+                                    //newinfo.setProfile(R.mipmap.ic_launcher_round);
                                     loadInfos.add(newinfo);
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
-                            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                             Bundle args = new Bundle();
                             args.putSerializable("ARRAYLIST", (Serializable) loadInfos);
                             intent.putExtra("appInfos", args);
@@ -120,8 +112,8 @@ public class LoginActivity extends AppCompatActivity {
                         }
                     }
                 };
-                LoginRequest loginRequest = new LoginRequest(loginID, loginPassword, loginListener);
-                LoadDataRequest loadExamRequest = new LoadDataRequest(loginID, loadExamListener);
+                LoginRequest loginRequest = new LoginRequest(userID, userPassword, loginListener);
+                LoadDataRequest loadExamRequest = new LoadDataRequest(userID, loadExamListener);
                 RequestQueue queue = Volley.newRequestQueue(LoginActivity.this);
                 queue.add(loginRequest);
                 queue.add(loadExamRequest);

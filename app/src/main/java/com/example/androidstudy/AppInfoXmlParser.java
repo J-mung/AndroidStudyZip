@@ -79,7 +79,7 @@ public class AppInfoXmlParser {
                     //profile = Integer.parseInt(parser.getAttributeValue(1));
                     apps.get(id-1).setId(id);
                     //apps.get(id-1).setIv_profile(profile);
-                    apps.get(id-1).setProfile(R.mipmap.ic_launcher_round);
+                    apps.get(id-1).setProfile(String.valueOf(R.mipmap.ic_launcher_round));
                 } else if(parser.getName().equals("lecturer")) {
                     parser.next();
                     lecturer = parser.getText();
@@ -154,7 +154,7 @@ public class AppInfoXmlParser {
             }
         }
 
-        return (new AppInfo(R.mipmap.ic_launcher, tv_lecturer, tv_content, url, Integer.parseInt(id)));
+        return (new AppInfo(String.valueOf(R.mipmap.ic_launcher), tv_lecturer, tv_content, url, Integer.parseInt(id)));
         //return (new AppInfo(profile, lecturer, content, url, id));
     }
 

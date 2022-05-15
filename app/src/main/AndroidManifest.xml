@@ -29,12 +29,12 @@
         <activity
             android:name=".activitys.server_system.LoginActivity"
             android:exported="true" >
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
         <activity
             android:name=".activitys.server_system.RegisterActivity"
@@ -75,6 +75,7 @@
         <activity
             android:name=".activitys.MainActivity"
             android:exported="false">
+
         </activity>
 
         <service android:name=".activitys.MusicService" />

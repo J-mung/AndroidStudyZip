@@ -26,10 +26,11 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    private MainAdapter mainAdapter;
+    private static MainAdapter mainAdapter;
     private RecyclerView recyclerView;
     private LinearLayoutManager linearLayoutManager;
-    ArrayList<AppInfo> appInfos;
+    private static ArrayList<AppInfo> appInfos;
+    private static ArrayList<AppInfo> loadInfoFromDB;
     private long backBtnTime = 0;
     private Button btn_addExam;
     private FragmentManager fragmentManager;
@@ -48,24 +49,22 @@ public class MainActivity extends AppCompatActivity {
                 .setPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 .check();
 
-        // get user's ID
-        Intent intent= getIntent();
-        String userID = intent.getStringExtra("userID");
-
-
         // 리사이클러뷰에 LinearLayoutManager 객체 지정
         recyclerView = (RecyclerView) findViewById(R.id.recycler_main);
         linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);
 
-        // Get appinfos from DB
-        Intent intent = getIntent();
+        // get user's ID
+        Intent intent= getIntent();
+        String userID = intent.getStringExtra("userID");
+        // get appinfos from DB
         Bundle args = intent.getBundleExtra("appInfos");
-        ArrayList<AppInfo> loadInfoFromDB = (ArrayList<AppInfo>) args.getSerializable("ARRAYLIST");
+        loadInfoFromDB = (ArrayList<AppInfo>) args.getSerializable("ARRAYLIST");
 
         // using AppInfoResParser object
         AppInfoXmlParser resParser = new AppInfoXmlParser();
 
+        // get user's info from XML file
         resParser.parseXML(getApplicationContext(), getResources().getXml(R.xml.appinfores));
         appInfos = resParser.getAppInfos();
 
@@ -78,17 +77,18 @@ public class MainActivity extends AppCompatActivity {
 
         transaction = fragmentManager.beginTransaction();
 
+        // add item with DialogFragment
         btn_addExam = (Button) findViewById(R.id.btn_addExam);
         btn_addExam.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 AddDataDialog df = new AddDataDialog(userID);
                 df.show(getSupportFragmentManager(), "PopAddFormDialogFragment");
             }
         });
     }
 
+    // check for app termination from user
     @Override
     public void onBackPressed() {
         long curTime = System.currentTimeMillis();
@@ -96,7 +96,6 @@ public class MainActivity extends AppCompatActivity {
 
         if(0 <= gapTime && 2000 >= gapTime) {
             super.onBackPressed();
-
         } else {
             backBtnTime = curTime;
             Toast.makeText(this, "한번 더 누르면 종료됩니다.", Toast.LENGTH_SHORT).show();
@@ -114,4 +113,16 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "권한이 거부됨", Toast.LENGTH_SHORT).show();
         }
     };
+
+    public static MainAdapter getMainAdapter() {
+        return mainAdapter;
+    }
+
+    public static ArrayList<AppInfo> getLoadInfoFromDB() {
+        return loadInfoFromDB;
+    }
+
+    public static void setLoadInfoFromDB(ArrayList<AppInfo> loadInfoFromDB) {
+        MainActivity.loadInfoFromDB = loadInfoFromDB;
+    }
 }

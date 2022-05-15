@@ -18,7 +18,7 @@ public class AddDataRequest extends StringRequest {
         super(Method.POST, URL, listener, null);
 
         map = new HashMap<>();
-        map.put("User_userID", userID);
+        map.put("USER_userID", userID);
         map.put("id", String.valueOf(appinfo.getId()));
         map.put("lecturer", appinfo.getLecturer());
         map.put("content", appinfo.getContent());
@@ -28,6 +28,6 @@ public class AddDataRequest extends StringRequest {
     @Nullable
     @Override
     protected Map<String, String> getParams() throws AuthFailureError {
-        return super.getParams();
+        return map;
     }
 }
