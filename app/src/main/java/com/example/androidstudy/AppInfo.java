@@ -3,21 +3,21 @@ package com.example.androidstudy;
 import java.io.Serializable;
 
 public class AppInfo implements Serializable {
-    private int profile;
+    private String profile;
     private String lecturer;
     private String content;
     private String url;
-    private int id;
+    private int id;     // 사용성 고려해보기
 
     public AppInfo() {
-        profile = 0;
+        profile = String.valueOf(R.mipmap.ic_launcher_round);
         lecturer = null;
         content = null;
         url = null;
         id = 0;
     }
 
-    public AppInfo(int profile, String lecturer, String content, String url, int id) {
+    public AppInfo(String profile, String lecturer, String content, String url, int id) {
         this.profile = profile;
         this.lecturer = lecturer;
         this.content = content;
@@ -44,9 +44,9 @@ public class AppInfo implements Serializable {
         this.id = id;
     }
 
-    public int getProfile() { return profile; }
+    public String getProfile() { return profile; }
 
-    public void setProfile(int iv_profile) {
+    public void setProfile(String iv_profile) {
         this.profile = iv_profile;
     }
 

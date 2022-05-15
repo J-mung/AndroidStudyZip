@@ -24,6 +24,8 @@ import com.example.androidstudy.activitys.MainActivity;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+
 public class AddDataDialog extends DialogFragment {
 
     private String TAG = "PopAddFormDialogFragment";
@@ -71,6 +73,11 @@ public class AddDataDialog extends DialogFragment {
                             if(success) {
                                 //Toast.makeText((MainActivity)getActivity(), "예제 추가 완료", Toast.LENGTH_SHORT).show();
                                 Log.d(TAG, "예제 추가 완료");
+                                // 생성된 추가 정보를 arraylist appInfos에 추가
+                                ArrayList<AppInfo> appInfos = MainActivity.getLoadInfoFromDB();
+                                appInfos.add(addInfo);
+                                MainActivity.setLoadInfoFromDB(appInfos);
+                                MainActivity.getMainAdapter().notifyItemInserted(appInfos.size()-1);
                             } else {
                                 //Toast.makeText((MainActivity)getActivity(), "예제 추가 실패", Toast.LENGTH_SHORT).show();
                                 Log.d(TAG, "예제 추가 실패");
@@ -80,13 +87,14 @@ public class AddDataDialog extends DialogFragment {
                         }
                     }
                 };
-                AddDataRequest addDataRequest = new AddDataRequest("test1", addInfo, responseListener);
+                AddDataRequest addDataRequest = new AddDataRequest(userID, addInfo, responseListener);
                 RequestQueue requestQueue = Volley.newRequestQueue((MainActivity)getActivity());
                 requestQueue.add(addDataRequest);
 
                 dismiss();
             }
         });
+
         btn_dialog_cancle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

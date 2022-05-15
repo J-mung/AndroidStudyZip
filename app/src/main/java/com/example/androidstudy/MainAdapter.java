@@ -48,7 +48,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.CustomViewHold
 
     @Override
     public void onBindViewHolder(@NonNull MainAdapter.CustomViewHolder holder, int position) {
-        holder.iv_profile.setImageResource(appInfos.get(position).getProfile());
+        holder.iv_profile.setImageResource(Integer.parseInt(appInfos.get(position).getProfile()));
         holder.tv_lecturer.setText(appInfos.get(position).getLecturer());
         holder.tv_content.setText(appInfos.get(position).getContent());
         holder.tv_content_id.setText(String.valueOf(appInfos.get(position).getId()));
@@ -78,13 +78,12 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.CustomViewHold
                             String path = null;
                             try {
                                 path = "com.example.androidstudy.activitys." + holder.tv_content.getText();
-                                if (Class.forName(path) == null)
-                                    path = "com.example.androidstudy.activitys.server_system." + holder.tv_content.getText();
-
+                                /*if (Class.forName(path) == null)
+                                    path = "com.example.androidstudy.activitys.server_system." + holder.tv_content.getText();*/
                                 intent = new Intent(mContext, Class.forName(path));
                             } catch (Exception e) {
                                 e.printStackTrace();
-                                path = "com.example.androidstudy.activitys.login_system." + appInfos.get(id).getContent();
+                                path = "com.example.androidstudy.activitys.server_system." + holder.tv_content.getText();
                                 try {
                                     intent = new Intent(mContext, Class.forName(path));
                                 } catch (ClassNotFoundException classNotFoundException) {
@@ -115,10 +114,16 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.CustomViewHold
             }
         });
 
+        // xmlParser를 사용해서 개발했기 때문에 DB연동으로 appinfos를 사용하는 방식과 다름
+        // ex) arraylist에서 특정 item을 찾을 때 appinfo의 id를 활용(xmlParser)
+        //                                    while문을 사용해서 content를 비교(DB연동)
         holder.btn_setting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                setUrlDialog(Integer.parseInt(holder.tv_content_id.getText().toString())-1);
+                int idx = 0;
+                while(!appInfos.get(idx).getContent().equals(holder.tv_content.getText().toString()))
+                    idx++;
+                setUrlDialog(idx);
             }
         });
 
@@ -132,16 +137,16 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.CustomViewHold
         });
     }
 
-    public void setUrlDialog(int appId) {
+    public void setUrlDialog(int idx) {
         AlertDialog.Builder ad = new AlertDialog.Builder(mContext);
         ad.setIcon(R.mipmap.ic_launcher_round);
-        ad.setTitle(appInfos.get(appId).getContent());
+        ad.setTitle(appInfos.get(idx).getContent());
         ad.setMessage("url를 설정해주세요.");
         AppInfoXmlParser resParser = new AppInfoXmlParser();
 
-        // test setting url func
+        // default setting url func
         final EditText et = new EditText(mContext);
-        String url = appInfos.get(appId).getUrl();
+        String url = appInfos.get(idx).getUrl();
         if(url.equals(""))
             et.setHint("https://www.google.com");
         else
@@ -154,7 +159,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.CustomViewHold
                 String result = et.getText().toString();
                 Log.e("editXml", "xmlParser() call");
                 try {
-                    appInfos = resParser.editXmlFile(mContext, appId, result);
+                    appInfos = resParser.editXmlFile(mContext, idx, result);
                 } catch (XmlPullParserException e) {
                     e.printStackTrace();
                 } catch (IOException e) {
