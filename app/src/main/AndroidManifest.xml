@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.androidstudy" >
+    package="com.example.androidstudy">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CAMERA" />
@@ -16,7 +16,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AndroidStudy"
-        android:usesCleartextTraffic="true" >
+        android:usesCleartextTraffic="true">
         <activity
             android:name=".activitys.ExoPlayerActivity"
             android:exported="false" />
@@ -28,13 +28,12 @@
             android:exported="false" />
         <activity
             android:name=".activitys.server_system.LoginActivity"
-            android:exported="true" >
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
         <activity
             android:name=".activitys.server_system.RegisterActivity"
@@ -74,9 +73,7 @@
             android:exported="false" />
         <activity
             android:name=".activitys.MainActivity"
-            android:exported="false">
-
-        </activity>
+            android:exported="false"></activity>
 
         <service android:name=".activitys.MusicService" />
 
@@ -84,7 +81,7 @@
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.example.androidstudy"
             android:exported="false"
-            android:grantUriPermissions="true" >
+            android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />

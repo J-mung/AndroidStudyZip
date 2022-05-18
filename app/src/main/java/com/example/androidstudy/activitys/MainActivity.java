@@ -64,12 +64,12 @@ public class MainActivity extends AppCompatActivity {
         // using AppInfoResParser object
         AppInfoXmlParser resParser = new AppInfoXmlParser();
 
-        // get user's info from XML file
+        // get user's info from XML file (테스트용도로 사용해볼 것을 고려)
         resParser.parseXML(getApplicationContext(), getResources().getXml(R.xml.appinfores));
         appInfos = resParser.getAppInfos();
 
         // 리사이클러뷰에 mainAdapter 객체 지정
-        mainAdapter = new MainAdapter(MainActivity.this, loadInfoFromDB);
+        mainAdapter = new MainAdapter(MainActivity.this, loadInfoFromDB, userID);
         recyclerView.setAdapter(mainAdapter);
         mainAdapter.notifyDataSetChanged();
 
@@ -82,8 +82,8 @@ public class MainActivity extends AppCompatActivity {
         btn_addExam.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AddDataDialog df = new AddDataDialog(userID);
-                df.show(getSupportFragmentManager(), "PopAddFormDialogFragment");
+                AddDataDialog addf = new AddDataDialog(userID);
+                addf.show(getSupportFragmentManager(), "PopAddFormDialogFragment");
             }
         });
     }
