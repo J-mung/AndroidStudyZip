@@ -20,7 +20,9 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.androidstudy.activitys.MainActivity;
 import com.example.androidstudy.activitys.WebViewExam;
+import com.example.androidstudy.activitys.server_system.UpdateitemDialog;
 
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -31,10 +33,12 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.CustomViewHold
 
     private ArrayList<AppInfo> appInfos;
     private Context mContext;
+    private String userID;
     private SparseBooleanArray selectedItems = new SparseBooleanArray();    // 다중 선택시 선택한 position에 대한 item 정보를 보관하는 객체
-    public MainAdapter(Context context, ArrayList<AppInfo> arrayList) {
+    public MainAdapter(Context context, ArrayList<AppInfo> arrayList, String userID) {
         appInfos = arrayList;
         this.mContext = context;
+        this.userID = userID;
     }
 
     @NonNull
@@ -120,10 +124,11 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.CustomViewHold
         holder.btn_setting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                int idx = 0;
-                while(!appInfos.get(idx).getContent().equals(holder.tv_content.getText().toString()))
-                    idx++;
-                setUrlDialog(idx);
+                int selectOne = holder.getAbsoluteAdapterPosition();
+                UpdateitemDialog uidf = new UpdateitemDialog(mContext, userID, appInfos.get(selectOne));
+                // adapter 내에서 getSupportFragmentManger() 호출이 불가해서 casting 시도
+                uidf.show(((MainActivity)mContext).getSupportFragmentManager(), "PopUpdateFormDialogFragment");
+                //ㅅsetUrlDialog(selectOne);
             }
         });
 
@@ -158,6 +163,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.CustomViewHold
             public void onClick(DialogInterface dialogInterface, int i) {
                 String result = et.getText().toString();
                 Log.e("editXml", "xmlParser() call");
+                // 변경사항을 XML file에 반영
                 try {
                     appInfos = resParser.editXmlFile(mContext, idx, result);
                 } catch (XmlPullParserException e) {

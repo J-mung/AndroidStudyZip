@@ -10,13 +10,14 @@ import java.util.Map;
 public class LoadDataRequest extends StringRequest {
 
     // 서버 URL 설정 (FileZilla에 업로드한 AddExamRequest.php 연동)
-    final static private String URL = "http://xorb1198.dothome.co.kr/LoadExam.php";
+    final static private String URL = "http://xorb1198.dothome.co.kr/ServerRequests.php";
     private Map<String, String> map;
 
     public LoadDataRequest(String userID, Response.Listener<String> listener) {
         super(Method.POST, URL, listener, null);
 
         map = new HashMap<>();
+        map.put("kindOfRequest", "Load");
         map.put("USER_userID", userID);
     }
 

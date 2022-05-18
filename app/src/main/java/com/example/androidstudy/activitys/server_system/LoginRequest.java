@@ -10,7 +10,7 @@ import java.util.Map;
 public class LoginRequest extends StringRequest {
 
     // 서버 URL 설정 (FileZilla에 업로드한 Register.php 연동)
-    final static private String URL = "http://xorb1198.dothome.co.kr/Login.php";
+    final static private String URL = "http://xorb1198.dothome.co.kr/ServerRequests.php";
     private Map<String, String> map;
 
     // 로그인 요청
@@ -18,6 +18,7 @@ public class LoginRequest extends StringRequest {
         super(Method.POST, URL, listener, null);
 
         map = new HashMap<>();
+        map.put("kindOfRequest", "Login");
         map.put("userID", userID);
         map.put("userPassword", userPassword);
     }

@@ -10,15 +10,15 @@ import com.example.androidstudy.AppInfo;
 import java.util.HashMap;
 import java.util.Map;
 
-public class AddDataRequest extends StringRequest {
+public class UpdateSqlRequest extends StringRequest {
     final static private String URL = "http://xorb1198.dothome.co.kr/ServerRequests.php";
     private Map<String, String> map;
 
-    public AddDataRequest(String userID, AppInfo appInfo, Response.Listener<String> listener) {
-        super(Method.POST, URL, listener, null);
+    public UpdateSqlRequest(String userID, AppInfo appInfo, Response.Listener<String> listener, @Nullable Response.ErrorListener errorListener) {
+        super(Method.POST, URL, listener, errorListener);
 
         map = new HashMap<>();
-        map.put("kindOfRequest", "Add");
+        map.put("kindOfRequest", "Update");
         map.put("USER_userID", userID);
         map.put("id", String.valueOf(appInfo.getId()));
         map.put("lecturer", appInfo.getLecturer());
@@ -26,7 +26,6 @@ public class AddDataRequest extends StringRequest {
         map.put("url", appInfo.getUrl());
     }
 
-    @Nullable
     @Override
     protected Map<String, String> getParams() throws AuthFailureError {
         return map;
