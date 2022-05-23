@@ -34,11 +34,6 @@ public class AddDataDialog extends DialogFragment {
     private AutoCompleteTextView actv_url;
     private Button btn_dialog_confirm;
     private Button btn_dialog_cancle;
-    private String userID;
-
-    public AddDataDialog(String userID) {
-        this.userID = userID;
-    }
 
     @Nullable
     @Override
@@ -87,7 +82,7 @@ public class AddDataDialog extends DialogFragment {
                         }
                     }
                 };
-                AddDataRequest addDataRequest = new AddDataRequest(userID, addInfo, responseListener);
+                AddDataRequest addDataRequest = new AddDataRequest(MainActivity.getUserID(), addInfo, responseListener);
                 RequestQueue requestQueue = Volley.newRequestQueue((MainActivity)getActivity());
                 requestQueue.add(addDataRequest);
 

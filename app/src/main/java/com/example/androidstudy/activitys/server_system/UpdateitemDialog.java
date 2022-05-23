@@ -33,12 +33,10 @@ public class UpdateitemDialog extends DialogFragment {
     private AutoCompleteTextView actv_update_url;
     private Button btn_update_cancle;
     private Button btn_update_confirm;
-    private String userID;
     private AppInfo appInfo;
     private Context mContext;
 
-    public UpdateitemDialog(Context mContext, String userID, AppInfo appInfo) {
-        this.userID = userID;
+    public UpdateitemDialog(Context mContext, AppInfo appInfo) {
         this.appInfo = appInfo;
         this.mContext = mContext;
     }
@@ -96,7 +94,7 @@ public class UpdateitemDialog extends DialogFragment {
                 };
                 appInfo.setLecturer(String.valueOf(actv_update_lecturer.getText()));
                 appInfo.setUrl(String.valueOf(actv_update_url.getText()));
-                UpdateSqlRequest updateSqlRequest = new UpdateSqlRequest(userID, appInfo, responseListener, null);
+                UpdateSqlRequest updateSqlRequest = new UpdateSqlRequest(MainActivity.getUserID(), appInfo, responseListener, null);
                 RequestQueue requestQueue = Volley.newRequestQueue(mContext);
                 requestQueue.add(updateSqlRequest);
 

@@ -1,7 +1,9 @@
 package com.example.androidstudy.activitys.server_system;
 
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -30,6 +32,7 @@ public class LoginActivity extends AppCompatActivity {
     private Button btn_login, btn_register;
     private boolean loginSuccess;
     private Intent intent;
+    private ActivityResultLauncher<Intent> resultLauncher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,7 +111,8 @@ public class LoginActivity extends AppCompatActivity {
                             Bundle args = new Bundle();
                             args.putSerializable("ARRAYLIST", (Serializable) loadInfos);
                             intent.putExtra("appInfos", args);
-                            startActivity(intent);
+                            setResult(RESULT_OK, intent);
+                            finish();
                         }
                     }
                 };
@@ -119,6 +123,10 @@ public class LoginActivity extends AppCompatActivity {
                 queue.add(loadExamRequest);
             }
         });
+    }
 
+    private void backMainActivity() {
+
+        setResult(Activity.RESULT_OK);
     }
 }
