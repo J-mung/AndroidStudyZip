@@ -33,12 +33,11 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.CustomViewHold
 
     private ArrayList<AppInfo> appInfos;
     private Context mContext;
-    private String userID;
     private SparseBooleanArray selectedItems = new SparseBooleanArray();    // 다중 선택시 선택한 position에 대한 item 정보를 보관하는 객체
-    public MainAdapter(Context context, ArrayList<AppInfo> arrayList, String userID) {
+
+    public MainAdapter(Context context, ArrayList<AppInfo> arrayList) {
         appInfos = arrayList;
         this.mContext = context;
-        this.userID = userID;
     }
 
     @NonNull
@@ -125,7 +124,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.CustomViewHold
             @Override
             public void onClick(View view) {
                 int selectOne = holder.getAbsoluteAdapterPosition();
-                UpdateitemDialog uidf = new UpdateitemDialog(mContext, userID, appInfos.get(selectOne));
+                UpdateitemDialog uidf = new UpdateitemDialog(mContext, appInfos.get(selectOne));
                 // adapter 내에서 getSupportFragmentManger() 호출이 불가해서 casting 시도
                 uidf.show(((MainActivity)mContext).getSupportFragmentManager(), "PopUpdateFormDialogFragment");
                 //ㅅsetUrlDialog(selectOne);
