@@ -20,10 +20,16 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.toolbox.Volley;
 import com.example.androidstudy.activitys.MainActivity;
 import com.example.androidstudy.activitys.WebViewExam;
+import com.example.androidstudy.activitys.server_system.DeleteDateRequest;
 import com.example.androidstudy.activitys.server_system.UpdateitemDialog;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
@@ -61,8 +67,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.CustomViewHold
             @Override
             public void onClick(View view) {
                 // 선택된 content의 name, url 등의 정보를 appInfos에서 쉽게 얻기 위해 idx값 활용
-                int idx = 0;
-                while(appInfos.get(idx).getContent() != holder.tv_content.getText()) { idx++; }
+                int idx = findAppinfo(holder.tv_content.getText().toString());
 
                 // get()는 position값이 존재하면 true를 반환함
                 if (selectedItems.get(holder.getAdapterPosition())) { // VISIBLE -> INVISIBLE
@@ -134,8 +139,8 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.CustomViewHold
         holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                String appName = holder.tv_content.getText().toString();
-
+                String delete = holder.tv_content.getText().toString();
+                delItem(delete);
                 return true;
             }
         });
@@ -206,5 +211,42 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.CustomViewHold
             this.btn_expand_start = (Button) itemView.findViewById(R.id.btn_expand_start);
             this.btn_setting = (ImageButton) itemView.findViewById(R.id.btn_setting);
         }
+    }
+
+    public int findAppinfo(String content) {
+        int idx = 0;
+        while(appInfos.get(idx).getContent() != content) {
+            idx++;
+        }
+        return idx;
+    }
+
+    public void delItem(String delete) {
+        int idx = findAppinfo(delete);
+
+        Response.Listener<String> delExamListener = new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    boolean delSuccess = jsonObject.getBoolean("success");
+
+                    if(delSuccess) {
+                        appInfos.remove(idx);
+                        notifyItemRemoved(idx);
+                        notifyItemRangeChanged(idx, appInfos.size());
+                        Toast.makeText(mContext, "삭제 완료", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(mContext, "삭제 실패", Toast.LENGTH_SHORT).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        DeleteDateRequest delRequest = new DeleteDateRequest(MainActivity.getUserID(), appInfos.get(idx).getContent(), delExamListener);
+        RequestQueue queue = Volley.newRequestQueue(mContext);
+        queue.add(delRequest);
+
     }
 }
