@@ -57,6 +57,7 @@ public class AddDataDialog extends DialogFragment {
                 addInfo.setContent(String.valueOf(actv_content.getText()));
                 addInfo.setLecturer(String.valueOf(actv_lecturer.getText()));
                 addInfo.setUrl(String.valueOf(actv_url.getText()));
+                addInfo.setId(MainActivity.getNextID());
 
                 Response.Listener<String> responseListener = new Response.Listener<String>() {
                     @Override

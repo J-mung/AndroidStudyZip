@@ -165,11 +165,14 @@ public class MainActivity extends AppCompatActivity implements StartDragListener
         return loadInfoFromDB;
     }
 
-    public static void setLoadInfoFromDB(ArrayList<AppInfo> loadInfoFromDB) {
-        MainActivity.loadInfoFromDB = loadInfoFromDB;
-    }
     public static String getUserID() {
         return userID;
+    }
+
+    public static int getNextID() { return loadInfoFromDB.size() + 1; }
+
+    public static void setLoadInfoFromDB(ArrayList<AppInfo> loadInfoFromDB) {
+        MainActivity.loadInfoFromDB = loadInfoFromDB;
     }
 
     ActivityResultLauncher<Intent> getLoginResult = registerForActivityResult(

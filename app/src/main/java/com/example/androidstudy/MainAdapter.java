@@ -180,7 +180,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.CustomViewHold
             @Override
             public boolean onLongClick(View view) {
                 String delete = holder.tv_content.getText().toString();
-                //delItem(delete);
+                delItem(delete);
                 return true;
             }
         });
