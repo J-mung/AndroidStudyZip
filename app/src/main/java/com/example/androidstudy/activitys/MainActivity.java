@@ -8,6 +8,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -21,8 +22,10 @@ import android.widget.Toast;
 
 import com.example.androidstudy.AppInfo;
 import com.example.androidstudy.AppInfoXmlParser;
+import com.example.androidstudy.ItemMoveCallback;
 import com.example.androidstudy.MainAdapter;
 import com.example.androidstudy.R;
+import com.example.androidstudy.StartDragListener;
 import com.example.androidstudy.activitys.server_system.AddDataDialog;
 import com.example.androidstudy.activitys.server_system.LoginActivity;
 import com.gun0912.tedpermission.PermissionListener;
@@ -31,7 +34,7 @@ import com.gun0912.tedpermission.TedPermission;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements StartDragListener{
 
     private static MainAdapter mainAdapter;
     private RecyclerView recyclerView;
@@ -47,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
     private FragmentManager fragmentManager;
     private FragmentTransaction transaction;
     private Intent loginIntent;
+    private ItemTouchHelper touchHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,7 +110,13 @@ public class MainActivity extends AppCompatActivity {
             */
 
             // 리사이클러뷰에 mainAdapter 객체 지정
-            mainAdapter = new MainAdapter(MainActivity.this, loadInfoFromDB);
+            mainAdapter = new MainAdapter(MainActivity.this, loadInfoFromDB, this);
+
+            // Set TouchHelper for drag and drop
+            ItemTouchHelper.Callback callback = new ItemMoveCallback(mainAdapter);
+            touchHelper = new ItemTouchHelper(callback);
+            touchHelper.attachToRecyclerView(recyclerView);
+
             recyclerView.setAdapter(mainAdapter);
             mainAdapter.notifyDataSetChanged();
 
@@ -155,11 +165,14 @@ public class MainActivity extends AppCompatActivity {
         return loadInfoFromDB;
     }
 
-    public static void setLoadInfoFromDB(ArrayList<AppInfo> loadInfoFromDB) {
-        MainActivity.loadInfoFromDB = loadInfoFromDB;
-    }
     public static String getUserID() {
         return userID;
+    }
+
+    public static int getNextID() { return loadInfoFromDB.size() + 1; }
+
+    public static void setLoadInfoFromDB(ArrayList<AppInfo> loadInfoFromDB) {
+        MainActivity.loadInfoFromDB = loadInfoFromDB;
     }
 
     ActivityResultLauncher<Intent> getLoginResult = registerForActivityResult(
@@ -178,5 +191,11 @@ public class MainActivity extends AppCompatActivity {
     private void moveLoginActivity() {
         Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
         getLoginResult.launch(intent);
+    }
+
+    // In order to use a specific handle view to drag and drop
+    @Override
+    public void requestDrag(RecyclerView.ViewHolder viewHolder) {
+        touchHelper.startDrag(viewHolder);
     }
 }

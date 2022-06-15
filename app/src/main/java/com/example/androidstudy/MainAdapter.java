@@ -3,9 +3,11 @@ package com.example.androidstudy;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -34,16 +36,43 @@ import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 
-public class MainAdapter extends RecyclerView.Adapter<MainAdapter.CustomViewHolder> {
+public class MainAdapter extends RecyclerView.Adapter<MainAdapter.CustomViewHolder> implements ItemMoveCallback.ItemTouchHelperContract {
 
     private ArrayList<AppInfo> appInfos;
     private Context mContext;
     private SparseBooleanArray selectedItems = new SparseBooleanArray();    // 다중 선택시 선택한 position에 대한 item 정보를 보관하는 객체
+    
+    private final StartDragListener mStartDragListener;
 
-    public MainAdapter(Context context, ArrayList<AppInfo> arrayList) {
+    public class CustomViewHolder extends RecyclerView.ViewHolder{
+        public View rowView;
+        protected ImageView iv_profile, iv_drag_drop;
+        protected TextView tv_lecturer, tv_content, tv_content_id;
+        protected LinearLayout item_expand;
+        protected Button btn_expand_url, btn_expand_start;
+        protected ImageButton btn_setting;
+
+        public CustomViewHolder(@NonNull View itemView) {
+            super(itemView);
+            rowView = itemView;
+            this.iv_profile = (ImageView) itemView.findViewById(R.id.iv_profile);
+            this.iv_drag_drop = (ImageView) itemView.findViewById(R.id.iv_drag_drop);
+            this.tv_lecturer = (TextView) itemView.findViewById(R.id.tv_lecturer);
+            this.tv_content = (TextView) itemView.findViewById(R.id.tv_content);
+            this.tv_content_id = (TextView) itemView.findViewById(R.id.tv_content_id);
+            this.item_expand = (LinearLayout) itemView.findViewById(R.id.item_expend);
+            this.btn_expand_url = (Button) itemView.findViewById(R.id.btn_expand_url);
+            this.btn_expand_start = (Button) itemView.findViewById(R.id.btn_expand_start);
+            this.btn_setting = (ImageButton) itemView.findViewById(R.id.btn_setting);
+        }
+    }
+
+    public MainAdapter(Context context, ArrayList<AppInfo> arrayList, StartDragListener startDragListener) {
         appInfos = arrayList;
         this.mContext = context;
+        mStartDragListener = startDragListener;
     }
 
     @NonNull
@@ -61,6 +90,17 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.CustomViewHold
         holder.tv_lecturer.setText(appInfos.get(position).getLecturer());
         holder.tv_content.setText(appInfos.get(position).getContent());
         holder.tv_content_id.setText(String.valueOf(appInfos.get(position).getId()));
+
+        // specific area for drag and drop
+        holder.iv_drag_drop.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if(event.getAction() == MotionEvent.ACTION_DOWN) {
+                    mStartDragListener.requestDrag(holder);
+                }
+                return false;
+            }
+        });
 
         holder.itemView.setTag(position);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -193,24 +233,32 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.CustomViewHold
         return (null != appInfos ? appInfos.size() : 0);
     }
 
-    public class CustomViewHolder extends RecyclerView.ViewHolder{
-        protected ImageView iv_profile;
-        protected TextView tv_lecturer, tv_content, tv_content_id;
-        protected LinearLayout item_expand;
-        protected Button btn_expand_url, btn_expand_start;
-        protected ImageButton btn_setting;
-
-        public CustomViewHolder(@NonNull View itemView) {
-            super(itemView);
-            this.iv_profile = (ImageView) itemView.findViewById(R.id.iv_profile);
-            this.tv_lecturer = (TextView) itemView.findViewById(R.id.tv_lecturer);
-            this.tv_content = (TextView) itemView.findViewById(R.id.tv_content);
-            this.tv_content_id = (TextView) itemView.findViewById(R.id.tv_content_id);
-            this.item_expand = (LinearLayout) itemView.findViewById(R.id.item_expend);
-            this.btn_expand_url = (Button) itemView.findViewById(R.id.btn_expand_url);
-            this.btn_expand_start = (Button) itemView.findViewById(R.id.btn_expand_start);
-            this.btn_setting = (ImageButton) itemView.findViewById(R.id.btn_setting);
+    /*
+    * onRowMoved defined in the Contract interface earlier gets called when the drag and drop is done.
+    * Here we swap the positions of the two rows present in the ArrayList and call notifyItemMoved to refresh the adapter.
+    * */
+    @Override
+    public void onRowMoved(int fromPosition, int toPosition) {
+        if (fromPosition < toPosition) {
+            for (int i = fromPosition; i < toPosition; i++) {
+                Collections.swap(appInfos, i, i + 1);
+            }
+        } else {
+            for (int i = fromPosition; i > toPosition; i--) {
+                Collections.swap(appInfos, i, i - 1);
+            }
         }
+        notifyItemMoved(fromPosition, toPosition);
+    }
+
+    @Override
+    public void onRowSelected(CustomViewHolder myViewHolder) {
+        myViewHolder.rowView.setBackgroundColor(Color.GRAY);
+    }
+
+    @Override
+    public void onRowClear(CustomViewHolder myViewHolder) {
+        myViewHolder.rowView.setBackgroundColor(Color.WHITE);
     }
 
     public int findAppinfo(String content) {
@@ -221,6 +269,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.CustomViewHold
         return idx;
     }
 
+    // item delete method
     public void delItem(String delete) {
         int idx = findAppinfo(delete);
 
